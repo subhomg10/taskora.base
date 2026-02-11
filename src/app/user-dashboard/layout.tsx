@@ -26,18 +26,21 @@ export default function UserDashboardLayout({
   const { data: workerProfile, isLoading: isProfileLoading } = useDoc(workerRef);
 
   useEffect(() => {
+    // Only perform redirection logic once auth and profile loading states are settled
     if (!isUserLoading && !isProfileLoading) {
       if (!user) {
         router.replace('/login');
       } else if (user.email === 'subhomghosh06@gmail.com') {
         router.replace('/dashboard');
-      } else if (!workerProfile || !workerProfile.profileCompleted) {
+      } else if (!workerProfile?.profileCompleted) {
+        // If the profile isn't marked as completed, send them back to setup
         router.replace('/profile-setup');
       }
     }
   }, [user, isUserLoading, workerProfile, isProfileLoading, router]);
 
-  if (isUserLoading || isProfileLoading) {
+  // Show loading while we determine the user's destination
+  if (isUserLoading || isProfileLoading || (!user || (!workerProfile?.profileCompleted && user.email !== 'subhomghosh06@gmail.com'))) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />

@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -121,13 +122,18 @@ export default function ProfileSetupPage() {
 
   useEffect(() => {
     if (existingProfile) {
-      setFormData((prev: any) => ({ ...prev, ...existingProfile }));
+      // Avoid overwriting local changes if we're in the middle of editing
+      setFormData((prev: any) => {
+        if (prev.profileCompleted) return prev; // If already done, don't keep resetting
+        return { ...prev, ...existingProfile };
+      });
     }
   }, [existingProfile]);
 
   const handleNext = () => {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
+      // Auto-save draft
       if (workerRef) {
         setDocumentNonBlocking(workerRef, formData, { merge: true });
       }
@@ -144,11 +150,18 @@ export default function ProfileSetupPage() {
     if (!workerRef) return;
     setIsSubmitting(true);
     try {
-      const finalData = { ...formData, profileCompleted: true };
+      const finalData = { 
+        ...formData, 
+        profileCompleted: true,
+        updatedAt: new Date().toISOString() 
+      };
+      
       // Explicitly set the document and wait for it before redirecting
       await setDoc(workerRef, finalData, { merge: true });
+      
       toast({ title: "Profile Completed", description: "Welcome to Taskora!" });
-      // Direct replacement of route to the user dashboard
+      
+      // Navigate to dashboard - the layout will now see profileCompleted = true
       router.replace('/user-dashboard');
     } catch (error: any) {
       toast({ variant: "destructive", title: "Setup Error", description: error.message });

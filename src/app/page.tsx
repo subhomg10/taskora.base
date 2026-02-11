@@ -32,9 +32,11 @@ export default function Home() {
       }
 
       // Worker profile completion check
-      if (workerProfile && workerProfile.profileCompleted) {
+      // If we have profile data and it's completed, go to dashboard
+      if (workerProfile?.profileCompleted) {
         router.replace('/user-dashboard');
       } else {
+        // Otherwise, they need to set up their profile
         router.replace('/profile-setup');
       }
     }
