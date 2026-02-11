@@ -2,8 +2,6 @@
 "use client"
 
 import { useAuth } from "@/lib/auth-context"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { ShieldCheck } from "lucide-react"
@@ -13,14 +11,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, loading, isAdmin } = useAuth()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login")
-    }
-  }, [user, loading, router])
+  const { loading } = useAuth()
 
   if (loading) {
     return (
@@ -32,8 +23,6 @@ export default function DashboardLayout({
       </div>
     )
   }
-
-  if (!user) return null
 
   return (
     <div className="flex min-h-screen bg-background">
