@@ -39,8 +39,9 @@ const mockJobs = [
     requirements: ["8+ years React experience", "Deep knowledge of TypeScript", "Experience with AWS"],
     coverImage: "https://picsum.photos/seed/job1/800/600",
     applicantsCount: 12,
-    location: "Remote / New York",
+    location: "Remote / Bangalore, Karnataka",
     postedAt: "2 days ago",
+    deadline: "2026-03-15",
     tags: ["Full-time", "React", "Senior"],
     applicants: [
       { id: "a1", name: "Alex Rivera", skills: "React, Node.js, TS", rating: 4.8, photo: "https://picsum.photos/seed/w1/200/200" },
@@ -55,8 +56,9 @@ const mockJobs = [
     requirements: ["Portfolio of web apps", "Figma mastery", "Design systems experience"],
     coverImage: "https://picsum.photos/seed/job2/800/600",
     applicantsCount: 24,
-    location: "San Francisco, CA",
+    location: "Mumbai, Maharashtra",
     postedAt: "5 days ago",
+    deadline: "2026-03-22",
     tags: ["Contract", "Design", "Figma"],
     applicants: [
       { id: "a4", name: "Emma Watson", skills: "UI, UX, Prototyping", rating: 4.7, photo: "https://picsum.photos/seed/w4/200/200" }
@@ -69,8 +71,9 @@ const mockJobs = [
     requirements: ["Kubernetes", "Terraform", "Jenkins/GitHub Actions"],
     coverImage: "https://picsum.photos/seed/job3/800/600",
     applicantsCount: 8,
-    location: "Remote",
+    location: "Remote / Hyderabad, Telangana",
     postedAt: "1 week ago",
+    deadline: "2026-03-05",
     tags: ["Part-time", "Cloud", "Security"],
     applicants: []
   }
@@ -311,6 +314,10 @@ export default function JobListingsPage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Applicants</span>
                       <span className="font-medium">{selectedJob.applicantsCount}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Deadline</span>
+                      <span className="font-medium">{selectedJob.deadline}</span>
                     </div>
                   </div>
                 </div>

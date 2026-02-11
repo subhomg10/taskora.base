@@ -32,8 +32,8 @@ const mockJobs = [
     fullDescription: "Develop scalable microservices and lead the frontend transition to Next.js. We need someone who understands clean architecture and has experience with high-load systems. You will be working with a high-performance team focusing on low-latency transactions.",
     requirements: ["8+ years React experience", "Deep knowledge of TypeScript", "Experience with AWS"],
     payment: 12000,
-    location: "Remote / New York",
-    deadline: "2024-12-31",
+    location: "Remote / Bangalore, Karnataka",
+    deadline: "2026-03-15",
     applicantsCount: 12,
     coverImage: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=1080",
     tags: ["Full-time", "React"]
@@ -45,8 +45,8 @@ const mockJobs = [
     fullDescription: "Create stunning user experiences for our next generation mobile application. Focus on accessibility and user-centric design principles. You will be responsible for creating prototypes and conducting user testing.",
     requirements: ["Portfolio of web apps", "Figma mastery", "Design systems experience"],
     payment: 8500,
-    location: "San Francisco, CA",
-    deadline: "2024-11-15",
+    location: "Mumbai, Maharashtra",
+    deadline: "2026-03-22",
     applicantsCount: 24,
     coverImage: "https://images.unsplash.com/photo-1650387220683-f9720bd98b55?auto=format&fit=crop&q=80&w=1080",
     tags: ["Contract", "Design"]
@@ -58,8 +58,8 @@ const mockJobs = [
     fullDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure. Automate everything and ensure system reliability. You will work closely with development teams to ensure smooth deployments.",
     requirements: ["Kubernetes", "Terraform", "Jenkins/GitHub Actions"],
     payment: 15000,
-    location: "Remote",
-    deadline: "2024-12-01",
+    location: "Remote / Hyderabad, Telangana",
+    deadline: "2026-03-05",
     applicantsCount: 8,
     coverImage: "https://images.unsplash.com/photo-1636673341470-54f37c461457?auto=format&fit=crop&q=80&w=1080",
     tags: ["Full-time", "Cloud"]
