@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "job-1",
+      "description": "Modern Office",
+      "imageUrl": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxvZmZpY2UlMjBzcGFjZXxlbnwwfHx8fDE3NzA3NDY4NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office space"
+    },
+    {
+      "id": "job-2",
+      "description": "Co-working Space",
+      "imageUrl": "https://images.unsplash.com/photo-1650387220683-f9720bd98b55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb3dvcmtpbmclMjBkZXNrfGVufDB8fHx8MTc3MDgzOTg0OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coworking desk"
+    },
+    {
+      "id": "job-3",
+      "description": "Tech Hub",
+      "imageUrl": "https://images.unsplash.com/photo-1636673341470-54f37c461457?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx0ZWNobm9sb2d5JTIwaHVifGVufDB8fHx8MTc3MDgzOTg0N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "technology hub"
+    },
+    {
+      "id": "worker-1",
+      "description": "Professional Portrait 1",
+      "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NzA4MTA2ODh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "worker-2",
+      "description": "Professional Portrait 2",
+      "imageUrl": "https://images.unsplash.com/photo-1522556189639-b150ed9c4330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NzA3MzYzMTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "worker-3",
+      "description": "Professional Portrait 3",
+      "imageUrl": "https://images.unsplash.com/photo-1557053910-d9eadeed1c58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc3MDc1MDkxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "id-proof",
+      "description": "Identity Document Placeholder",
+      "imageUrl": "https://images.unsplash.com/photo-1769690176832-3353c34d778c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkb2N1bWVudCUyMHBhcGVyfGVufDB8fHx8MTc3MDc3MTE3OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "document paper"
+    }
+  ]
 }
