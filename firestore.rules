@@ -47,10 +47,10 @@ service cloud.firestore {
 
     /** 
      * Checks if the user has administrative privileges. 
-     * Uses both the roles_admin collection and a hardcoded super-admin email check.
+     * Uses a hardcoded super-admin email check.
      */
     function isAdmin() {
-      return isSignedIn() && (request.auth.token.email == "subhomghosh06@gmail.com" || exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid)));
+      return isSignedIn() && request.auth.token.email == "subhomghosh06@gmail.com";
     }
 
     // --- COLLECTION RULES ---
