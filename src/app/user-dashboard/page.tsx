@@ -5,9 +5,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { 
   MapPin, 
-  Calendar, 
   Users, 
-  DollarSign,
   Clock,
   ArrowRight
 } from 'lucide-react';
@@ -23,7 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock Data from Admin
+// Mock Data
 const mockJobs = [
   {
     id: "j1",
@@ -63,6 +61,58 @@ const mockJobs = [
     applicantsCount: 8,
     coverImage: "https://images.unsplash.com/photo-1636673341470-54f37c461457?auto=format&fit=crop&q=80&w=1080",
     tags: ["Full-time", "Cloud"]
+  },
+  {
+    id: "j4",
+    title: "Full Stack Developer",
+    shortDescription: "Join our core product team to build and scale features using React and Node.js.",
+    fullDescription: "Join our core product team to build and scale features using React and Node.js. You'll be responsible for end-to-end feature development, from database schema design to frontend implementation. Focus on building high-performance APIs.",
+    requirements: ["Proficiency in React/Next.js", "Node.js/Express experience", "Familiarity with PostgreSQL"],
+    payment: 9500,
+    location: "Pune, Maharashtra",
+    deadline: "2026-03-28",
+    applicantsCount: 15,
+    coverImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1080",
+    tags: ["Full-time", "Next.js", "Node"]
+  },
+  {
+    id: "j5",
+    title: "Mobile App Developer (Flutter)",
+    shortDescription: "Develop high-performance cross-platform mobile applications.",
+    fullDescription: "Develop high-performance cross-platform mobile applications for iOS and Android using Flutter. Focus on smooth animations, responsive UI, and robust state management for our consumer app.",
+    requirements: ["Flutter & Dart mastery", "Experience with Firebase", "Published apps on Play Store/App Store"],
+    payment: 11000,
+    location: "Remote / Noida, UP",
+    deadline: "2026-03-10",
+    applicantsCount: 9,
+    coverImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1080",
+    tags: ["Contract", "Mobile", "Flutter"]
+  },
+  {
+    id: "j6",
+    title: "Data Scientist",
+    shortDescription: "Apply machine learning models to solve complex business problems.",
+    fullDescription: "Apply machine learning models to solve complex business problems. You will be working with large datasets to extract insights, build predictive models, and optimize our recommendation engine.",
+    requirements: ["Python & R proficiency", "TensorFlow/PyTorch experience", "Strong Math/Stats background"],
+    payment: 14000,
+    location: "Chennai, Tamil Nadu",
+    deadline: "2026-03-18",
+    applicantsCount: 5,
+    coverImage: "https://images.unsplash.com/photo-1551288049-bbda38a5f9ce?auto=format&fit=crop&q=80&w=1080",
+    tags: ["Full-time", "AI", "Data"]
+  },
+  {
+    id: "j7",
+    title: "Cloud Security Engineer",
+    shortDescription: "Secure our cloud infrastructure and manage identity access.",
+    fullDescription: "Secure our cloud infrastructure and manage identity access across multi-cloud environments. You will be auditing our AWS/GCP setup, implementing security best practices, and managing compliance.",
+    requirements: ["Security certifications (CISSP/CCSP)", "Hands-on AWS/Azure Security", "Network security knowledge"],
+    payment: 13000,
+    location: "Remote / Ahmedabad, Gujarat",
+    deadline: "2026-03-30",
+    applicantsCount: 4,
+    coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1080",
+    tags: ["Full-time", "Security", "Cloud"]
   }
 ];
 

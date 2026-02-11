@@ -19,6 +19,30 @@
       "imageHint": "technology hub"
     },
     {
+      "id": "job-4",
+      "description": "Full Stack Development",
+      "imageUrl": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1080",
+      "imageHint": "coding laptop"
+    },
+    {
+      "id": "job-5",
+      "description": "Mobile App Development",
+      "imageUrl": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1080",
+      "imageHint": "smartphone app"
+    },
+    {
+      "id": "job-6",
+      "description": "Data Science",
+      "imageUrl": "https://images.unsplash.com/photo-1551288049-bbda38a5f9ce?auto=format&fit=crop&q=80&w=1080",
+      "imageHint": "data analytics"
+    },
+    {
+      "id": "job-7",
+      "description": "Cybersecurity",
+      "imageUrl": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1080",
+      "imageHint": "security server"
+    },
+    {
       "id": "worker-1",
       "description": "Professional Portrait 1",
       "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NzA4MTA2ODh8MA&ixlib=rb-4.1.0&q=80&w=1080",

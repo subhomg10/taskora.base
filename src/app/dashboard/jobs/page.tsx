@@ -10,8 +10,6 @@ import {
   Users, 
   Star, 
   Mail, 
-  CheckCircle,
-  ExternalLink,
   Tag
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -22,8 +20,7 @@ import {
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogDescription,
-  DialogFooter
+  DialogDescription
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
@@ -37,7 +34,7 @@ const mockJobs = [
     title: "Senior Software Engineer",
     description: "Develop scalable microservices and lead the frontend transition to Next.js. We need someone who understands clean architecture and has experience with high-load systems.",
     requirements: ["8+ years React experience", "Deep knowledge of TypeScript", "Experience with AWS"],
-    coverImage: "https://picsum.photos/seed/job1/800/600",
+    coverImage: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=1080",
     applicantsCount: 12,
     location: "Remote / Bangalore, Karnataka",
     postedAt: "2 days ago",
@@ -45,8 +42,7 @@ const mockJobs = [
     tags: ["Full-time", "React", "Senior"],
     applicants: [
       { id: "a1", name: "Alex Rivera", skills: "React, Node.js, TS", rating: 4.8, photo: "https://picsum.photos/seed/w1/200/200" },
-      { id: "a2", name: "Sarah Chen", skills: "AWS, Docker, Python", rating: 4.9, photo: "https://picsum.photos/seed/w3/200/200" },
-      { id: "a3", name: "Michael Stone", skills: "Frontend, UX, React", rating: 4.5, photo: "https://picsum.photos/seed/w2/200/200" }
+      { id: "a2", name: "Sarah Chen", skills: "AWS, Docker, Python", rating: 4.9, photo: "https://picsum.photos/seed/w3/200/200" }
     ]
   },
   {
@@ -54,7 +50,7 @@ const mockJobs = [
     title: "UI/UX Product Designer",
     description: "Create stunning user experiences for our next generation mobile application. Focus on accessibility and user-centric design principles.",
     requirements: ["Portfolio of web apps", "Figma mastery", "Design systems experience"],
-    coverImage: "https://picsum.photos/seed/job2/800/600",
+    coverImage: "https://images.unsplash.com/photo-1650387220683-f9720bd98b55?auto=format&fit=crop&q=80&w=1080",
     applicantsCount: 24,
     location: "Mumbai, Maharashtra",
     postedAt: "5 days ago",
@@ -69,12 +65,64 @@ const mockJobs = [
     title: "DevOps Architect",
     description: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure. Automate everything and ensure system reliability.",
     requirements: ["Kubernetes", "Terraform", "Jenkins/GitHub Actions"],
-    coverImage: "https://picsum.photos/seed/job3/800/600",
+    coverImage: "https://images.unsplash.com/photo-1636673341470-54f37c461457?auto=format&fit=crop&q=80&w=1080",
     applicantsCount: 8,
     location: "Remote / Hyderabad, Telangana",
     postedAt: "1 week ago",
     deadline: "2026-03-05",
     tags: ["Part-time", "Cloud", "Security"],
+    applicants: []
+  },
+  {
+    id: "j4",
+    title: "Full Stack Developer",
+    description: "Join our core product team to build and scale features using React and Node.js. You'll be responsible for end-to-end feature development.",
+    requirements: ["Proficiency in React/Next.js", "Node.js/Express experience", "Familiarity with PostgreSQL"],
+    coverImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1080",
+    applicantsCount: 15,
+    location: "Pune, Maharashtra",
+    postedAt: "1 day ago",
+    deadline: "2026-03-28",
+    tags: ["Full-time", "Next.js", "Node"],
+    applicants: []
+  },
+  {
+    id: "j5",
+    title: "Mobile App Developer (Flutter)",
+    description: "Develop high-performance cross-platform mobile applications for iOS and Android using Flutter.",
+    requirements: ["Flutter & Dart mastery", "Experience with Firebase", "Published apps on Store"],
+    coverImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1080",
+    applicantsCount: 9,
+    location: "Remote / Noida, UP",
+    postedAt: "3 days ago",
+    deadline: "2026-03-10",
+    tags: ["Contract", "Mobile", "Flutter"],
+    applicants: []
+  },
+  {
+    id: "j6",
+    title: "Data Scientist",
+    description: "Apply machine learning models to solve complex business problems and extract insights from large datasets.",
+    requirements: ["Python & R proficiency", "TensorFlow/PyTorch experience", "Strong Statistics background"],
+    coverImage: "https://images.unsplash.com/photo-1551288049-bbda38a5f9ce?auto=format&fit=crop&q=80&w=1080",
+    applicantsCount: 5,
+    location: "Chennai, Tamil Nadu",
+    postedAt: "4 days ago",
+    deadline: "2026-03-18",
+    tags: ["Full-time", "AI", "Data"],
+    applicants: []
+  },
+  {
+    id: "j7",
+    title: "Cloud Security Engineer",
+    description: "Secure our cloud infrastructure and manage identity access across AWS and GCP environments.",
+    requirements: ["Security certifications (CISSP/CCSP)", "Hands-on AWS/Azure Security", "Network auditing experience"],
+    coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1080",
+    applicantsCount: 4,
+    location: "Remote / Ahmedabad, Gujarat",
+    postedAt: "6 days ago",
+    deadline: "2026-03-30",
+    tags: ["Full-time", "Security", "Cloud"],
     applicants: []
   }
 ];
@@ -228,10 +276,10 @@ export default function JobListingsPage() {
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-bold">Applicants ({selectedJob.applicants.length})</h3>
+                      <h3 className="text-lg font-bold">Applicants ({selectedJob.applicants?.length || 0})</h3>
                       <Button variant="ghost" size="sm" className="text-xs">Export List</Button>
                     </div>
-                    {selectedJob.applicants.length > 0 ? (
+                    {selectedJob.applicants?.length > 0 ? (
                       <div className="space-y-3">
                         {selectedJob.applicants.map((app: any) => (
                           <div key={app.id} className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
