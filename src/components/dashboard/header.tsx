@@ -33,6 +33,7 @@ export function DashboardHeader() {
   }
 
   const userInitials = user?.email?.substring(0, 2).toUpperCase() || "AD"
+  const isAdmin = user?.email === 'subhomghosh06@gmail.com';
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
@@ -89,7 +90,7 @@ export function DashboardHeader() {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Taskora User</p>
+                  <p className="text-sm font-medium leading-none">{isAdmin ? "Taskora Admin" : "Taskora User"}</p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email || "user@taskora.com"}
                   </p>
