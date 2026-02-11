@@ -3,17 +3,36 @@
 
 import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
-import { Moon, Sun, Globe, Search } from "lucide-react"
+import { Moon, Sun, Globe, Search, LogOut, User } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
+import { useAuth, useUser } from "@/firebase"
+import { signOut } from "firebase/auth"
+import { useRouter } from "next/navigation"
 
 export function DashboardHeader() {
   const { theme, toggleTheme } = useTheme()
+  const auth = useAuth()
+  const { user } = useUser()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      router.push('/login')
+    } catch (error) {
+      console.error("Logout failed", error)
+    }
+  }
+
+  const userInitials = user?.email?.substring(0, 2).toUpperCase() || "AD"
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
@@ -59,11 +78,30 @@ export function DashboardHeader() {
             <span className="sr-only">Toggle theme</span>
           </Button>
 
-          <div className="ml-2 flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold text-xs">
-              AD
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-8 w-8 rounded-full ml-2 p-0 outline-none">
+                <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center text-accent-foreground font-semibold text-xs border border-border shadow-sm">
+                  {userInitials}
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">Taskora User</p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user?.email || "user@taskora.com"}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-rose-600 focus:text-rose-600 cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
