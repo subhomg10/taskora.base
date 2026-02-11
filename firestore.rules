@@ -50,7 +50,7 @@ service cloud.firestore {
      * Uses both the roles_admin collection and a hardcoded super-admin email check.
      */
     function isAdmin() {
-      return isSignedIn() && (exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid)) || request.auth.token.email == "subhomghosh06@gmail.com");
+      return isSignedIn() && (request.auth.token.email == "subhomghosh06@gmail.com" || exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid)));
     }
 
     // --- COLLECTION RULES ---
@@ -131,7 +131,7 @@ service cloud.firestore {
      * @description Rules for Admin role assignment.
      * @path /roles_admin/{uid}
      * @allow (get) if signed in.
-     * @allow (list, create, update, delete) if false.
+     * @allow (list, create, update, delete) if false;
      * @principle Role assignment is handled outside of client rules (e.g., Admin SDK or Console).
      */
     match /roles_admin/{uid} {
