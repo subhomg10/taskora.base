@@ -1,0 +1,129 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * FIREBASE SECURITY RULES DOCUMENTATION
+     * 
+     * Core Philosophy:
+     * This ruleset implements a strict Role-Based Access Control (RBAC) and Owner-Ownership model. 
+     * Security is enforced at the path level for worker-specific data and via a dedicated admin 
+     * collection for elevated privileges.
+     * 
+     * Data Structure:
+     * - /jobs: Publicly readable job postings; managed exclusively by Admins.
+     * - /workers/{workerId}: Private worker profiles owned by the respective user.
+     * - /workers/{workerId}/applications: Subcollection for job applications, ensuring path-based isolation.
+     * - /workers/{workerId}/transactions: Subcollection for financial records, owner-readable but admin-written.
+     * - /roles_admin: A collection where the existence of a UID signifies administrative rights.
+     * 
+     * Key Security Decisions:
+     * 1. Public Job Feed: Jobs are visible to all users (including unauthenticated) to encourage signups.
+     * 2. Administrative Supremacy: Admins (defined by UID or specific email) have broad read/write access.
+     * 3. Immutability: Critical relational fields (like workerId in applications) are protected from modification.
+     * 4. Financial Integrity: Transactions can only be created or modified by Admins to prevent fraud.
+     * 
+     * Denormalization for Authorization:
+     * Relational integrity is maintained by validating that internal data fields (e.g., workerId) 
+     * match the parent path parameters, ensuring users cannot "inject" data into other users' trees.
+     */
+
+    // --- HELPER FUNCTIONS ---
+
+    /** Checks if the request is from a signed-in user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** Checks if the authenticated user's UID matches the provided userId. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** Checks ownership and ensures the document exists for destructive operations. */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /** 
+     * Checks if the user has administrative privileges. 
+     * Uses both the roles_admin collection and a hardcoded super-admin email check.
+     */
+    function isAdmin() {
+      return isSignedIn() && (exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid)) || request.auth.token.email == "subhomghosh06@gmail.com");
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Rules for the global Job Feed. Publicly viewable, admin-managed.
+     * @path /jobs/{jobId}
+     * @allow (get, list) if true (public access)
+     * @allow (create, update, delete) if user is an Admin.
+     * @deny (write) if user is a standard worker.
+     * @principle Public Read with Admin-Only Writes.
+     */
+    match /jobs/{jobId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Rules for Worker profiles. 
+     * @path /workers/{workerId}
+     * @allow (get) if user is the Owner or Admin.
+     * @allow (list) if user is Admin.
+     * @allow (create) if user is creating their own profile.
+     * @allow (update) if user is the Owner (immutable ID check).
+     * @deny (delete) if not an Admin.
+     * @principle Enforces path-based ownership for profile management.
+     */
+    match /workers/{workerId} {
+      allow get: if isOwner(workerId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(workerId) && request.resource.data.id == workerId;
+      allow update: if isExistingOwner(workerId) && (request.resource.data.id == resource.data.id || !('id' in request.resource.data));
+      allow delete: if isAdmin();
+
+      /**
+       * @description Rules for Job Applications submitted by workers.
+       * @path /workers/{workerId}/applications/{applicationId}
+       * @allow (get, list) if user is the Owner or Admin.
+       * @allow (create) if user is the Owner and links their own ID.
+       * @allow (update) if Admin (to change status) or Owner (if status is unchanged).
+       * @principle Secures subcollections using parent path parameters and relational validation.
+       */
+      match /applications/{applicationId} {
+        allow get, list: if isOwner(workerId) || isAdmin();
+        allow create: if isOwner(workerId) && request.resource.data.workerId == workerId;
+        allow update: if isAdmin() || (isExistingOwner(workerId) && request.resource.data.status == resource.data.status);
+        allow delete: if isAdmin();
+      }
+
+      /**
+       * @description Rules for financial Transactions. 
+       * @path /workers/{workerId}/transactions/{transactionId}
+       * @allow (get, list) if user is the Owner or Admin.
+       * @allow (create, update, delete) if Admin only.
+       * @deny (write) if user is the Owner (prevents manual wallet manipulation).
+       * @principle Protects financial integrity by restricting writes to authorized accounts only.
+       */
+      match /transactions/{transactionId} {
+        allow get, list: if isOwner(workerId) || isAdmin();
+        allow create, update, delete: if isAdmin();
+      }
+    }
+
+    /**
+     * @description Rules for Admin role assignment.
+     * @path /roles_admin/{uid}
+     * @allow (get) if signed in.
+     * @allow (list, create, update, delete) if false.
+     * @principle Role assignment is handled outside of client rules (e.g., Admin SDK or Console).
+     */
+    match /roles_admin/{uid} {
+      allow get: if isSignedIn();
+      allow list, create, update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "entities": {
+    "Job": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Job",
+      "type": "object",
+      "description": "Represents a job posting on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the job posting."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the job."
+        },
+        "coverImage": {
+          "type": "string",
+          "description": "URL of the cover image for the job.",
+          "format": "uri"
+        },
+        "shortDescription": {
+          "type": "string",
+          "description": "Brief summary of the job."
+        },
+        "fullDescription": {
+          "type": "string",
+          "description": "Detailed description of the job."
+        },
+        "requirements": {
+          "type": "string",
+          "description": "Job requirements and qualifications."
+        },
+        "payment": {
+          "type": "number",
+          "description": "Payment amount for the job."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the job."
+        },
+        "deadline": {
+          "type": "string",
+          "description": "Application deadline for the job.",
+          "format": "date-time"
+        },
+        "applicantIds": {
+          "type": "array",
+          "description": "References to Applicants. (Relationship: Job 1:N Application)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags associated with the job for searching.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "shortDescription",
+        "fullDescription",
+        "requirements",
+        "payment",
+        "location",
+        "deadline"
+      ]
+    },
+    "Worker": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Worker",
+      "type": "object",
+      "description": "Represents a worker or job seeker on the platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the worker."
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the worker."
+        },
+        "profileImage": {
+          "type": "string",
+          "description": "URL of the worker's profile image.",
+          "format": "uri"
+        },
+        "skills": {
+          "type": "array",
+          "description": "List of skills the worker possesses.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "availability": {
+          "type": "string",
+          "description": "Worker's availability status.",
+          "format": "date-time"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Indicates if the worker's profile is verified by the admin."
+        },
+        "walletBalance": {
+          "type": "number",
+          "description": "Worker's wallet balance."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "skills"
+      ]
+    },
+    "Application": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Application",
+      "type": "object",
+      "description": "Represents a worker's application to a specific job.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the application."
+        },
+        "workerId": {
+          "type": "string",
+          "description": "Reference to Worker. (Relationship: Worker 1:N Application)"
+        },
+        "jobId": {
+          "type": "string",
+          "description": "Reference to Job. (Relationship: Job 1:N Application)"
+        },
+        "applicationDate": {
+          "type": "string",
+          "description": "Date when the application was submitted.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the application (Applied, Selected, In Progress, Completed, Paid)."
+        }
+      },
+      "required": [
+        "id",
+        "workerId",
+        "jobId",
+        "applicationDate",
+        "status"
+      ]
+    },
+    "Transaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transaction",
+      "type": "object",
+      "description": "Represents a financial transaction in the worker's wallet.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transaction."
+        },
+        "workerId": {
+          "type": "string",
+          "description": "Reference to Worker. (Relationship: Worker 1:N Transaction)"
+        },
+        "jobId": {
+          "type": "string",
+          "description": "Reference to Job. (Relationship: Job 1:N Transaction)"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the transaction."
+        },
+        "transactionDate": {
+          "type": "string",
+          "description": "Date and time of the transaction.",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of transaction (e.g., deposit, withdrawal)."
+        }
+      },
+      "required": [
+        "id",
+        "workerId",
+        "jobId",
+        "amount",
+        "transactionDate",
+        "type"
+      ]
+    },
+    "Admin": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Admin",
+      "type": "object",
+      "description": "Represents an administrator user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the admin user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the admin.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "email"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/jobs/{jobId}",
+        "definition": {
+          "entityName": "Job",
+          "schema": {
+            "$ref": "#/backend/entities/Job"
+          },
+          "description": "Stores job postings. Includes standard job details such as title, description, requirements, and payment.",
+          "params": [
+            {
+              "name": "jobId",
+              "description": "Unique identifier for the job posting."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/workers/{workerId}",
+        "definition": {
+          "entityName": "Worker",
+          "schema": {
+            "$ref": "#/backend/entities/Worker"
+          },
+          "description": "Stores worker profiles. Contains worker details like name, skills, availability, and verification status.",
+          "params": [
+            {
+              "name": "workerId",
+              "description": "Unique identifier for the worker."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/workers/{workerId}/applications/{applicationId}",
+        "definition": {
+          "entityName": "Application",
+          "schema": {
+            "$ref": "#/backend/entities/Application"
+          },
+          "description": "Stores applications submitted by workers for specific jobs. Includes workerId, jobId, applicationDate, and status. This structure is path-based and allows for easy retrieval of a worker's applications.",
+          "params": [
+            {
+              "name": "workerId",
+              "description": "Unique identifier for the worker."
+            },
+            {
+              "name": "applicationId",
+              "description": "Unique identifier for the application."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/workers/{workerId}/transactions/{transactionId}",
+        "definition": {
+          "entityName": "Transaction",
+          "schema": {
+            "$ref": "#/backend/entities/Transaction"
+          },
+          "description": "Stores financial transactions for each worker. Includes jobId, amount, transactionDate, and type.",
+          "params": [
+            {
+              "name": "workerId",
+              "description": "Unique identifier for the worker."
+            },
+            {
+              "name": "transactionId",
+              "description": "Unique identifier for the transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{uid}",
+        "definition": {
+          "entityName": "Admin",
+          "schema": {
+            "$ref": "#/backend/entities/Admin"
+          },
+          "description": "Indicates admin role. Existence of a document in this collection grants admin privileges. Authorization relies solely on `request.auth.uid`.",
+          "params": [
+            {
+              "name": "uid",
+              "description": "Firebase Auth UID of the administrator."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure is designed to support the AdminPro application, focusing on job postings, worker management, and analytics. The design prioritizes Authorization Independence, enabling robust security rules and atomic operations. This is achieved primarily through denormalization. Specifically, the `applications` collection includes the `jobId`, and the `workerId`.  The `workerId` enables path-based rules. Segregation is used by using collections dedicated to jobs, workers, applications, and transactions. The admin role is managed through the `/roles_admin/{uid}` collection, facilitating simple existence-based security rules. This design supports secure `list` operations by ensuring homogeneous security requirements within each collection and leveraging path-based ownership where applicable. Explicit state modeling uses the `status` field for applications."
+  }
+}
