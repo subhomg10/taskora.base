@@ -25,7 +25,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { updateDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
 const STEPS = [
   { id: 'personal', title: 'Personal', icon: User },
@@ -64,6 +64,8 @@ export default function ProfileSetupPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<any>({
+    id: '',
+    email: '',
     name: '',
     phone: '',
     username: '',
@@ -91,6 +93,16 @@ export default function ProfileSetupPage() {
   const { data: existingProfile } = useDoc(workerRef);
 
   useEffect(() => {
+    if (user) {
+      setFormData((prev: any) => ({
+        ...prev,
+        id: user.uid,
+        email: user.email || prev.email
+      }));
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (existingProfile) {
       setFormData((prev: any) => ({ ...prev, ...existingProfile }));
     }
@@ -100,7 +112,8 @@ export default function ProfileSetupPage() {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
       if (workerRef) {
-        updateDocumentNonBlocking(workerRef, formData);
+        // Use setDocumentNonBlocking with merge: true to handle creation/update correctly
+        setDocumentNonBlocking(workerRef, formData, { merge: true });
       }
     } else {
       handleSubmit();
