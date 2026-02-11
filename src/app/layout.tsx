@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/lib/auth-context';
@@ -6,8 +5,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'AdminPro Dashboard',
-  description: 'Professional Firebase Admin Dashboard',
+  title: 'Taskora Dashboard',
+  description: 'Professional Task Management Dashboard',
 };
 
 export default function RootLayout({

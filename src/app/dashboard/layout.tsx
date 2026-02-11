@@ -1,4 +1,3 @@
-
 "use client"
 
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
@@ -17,7 +16,7 @@ export default function DashboardLayout({
         <div className="flex h-16 items-center border-b px-6">
           <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
             <ShieldCheck className="h-6 w-6 text-primary" />
-            <span>AdminPro</span>
+            <span>Taskora</span>
           </div>
         </div>
         <SidebarNav />
