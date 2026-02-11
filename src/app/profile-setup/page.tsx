@@ -108,7 +108,14 @@ export default function ProfileSetupPage() {
     return doc(firestore, 'workers', user.uid);
   }, [firestore, user?.uid]);
 
-  const { data: existingProfile } = useDoc(workerRef);
+  const { data: existingProfile, isLoading: isProfileLoading } = useDoc(workerRef);
+
+  // If already completed, don't let them stay here
+  useEffect(() => {
+    if (!isProfileLoading && existingProfile?.profileCompleted) {
+      router.replace('/user-dashboard');
+    }
+  }, [existingProfile, isProfileLoading, router]);
 
   useEffect(() => {
     if (user) {
@@ -122,13 +129,13 @@ export default function ProfileSetupPage() {
 
   useEffect(() => {
     if (existingProfile) {
-      // Avoid overwriting local changes if we're in the middle of editing
       setFormData((prev: any) => {
-        if (prev.profileCompleted) return prev; // If already done, don't keep resetting
+        // Only merge if not currently submitting to avoid state conflicts
+        if (isSubmitting) return prev;
         return { ...prev, ...existingProfile };
       });
     }
-  }, [existingProfile]);
+  }, [existingProfile, isSubmitting]);
 
   const handleNext = () => {
     if (currentStep < STEPS.length - 1) {
@@ -152,16 +159,18 @@ export default function ProfileSetupPage() {
     try {
       const finalData = { 
         ...formData, 
+        id: user?.uid, // Ensure ID is present
+        email: user?.email, // Ensure email is present
         profileCompleted: true,
         updatedAt: new Date().toISOString() 
       };
       
-      // Explicitly set the document and wait for it before redirecting
+      // Explicitly set the document and wait for it
       await setDoc(workerRef, finalData, { merge: true });
       
       toast({ title: "Profile Completed", description: "Welcome to Taskora!" });
       
-      // Navigate to dashboard - the layout will now see profileCompleted = true
+      // Perform the redirect
       router.replace('/user-dashboard');
     } catch (error: any) {
       toast({ variant: "destructive", title: "Setup Error", description: error.message });
@@ -178,7 +187,7 @@ export default function ProfileSetupPage() {
     }));
   };
 
-  if (isUserLoading) return (
+  if (isUserLoading || isProfileLoading) return (
     <div className="min-h-screen flex items-center justify-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary" />
     </div>
