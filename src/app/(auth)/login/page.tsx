@@ -33,7 +33,8 @@ export default function LoginPage() {
       }
 
       // Role-based redirection logic
-      if (email === 'subhomghosh06@gmail.com') {
+      // admin: subhomghosh06@gmail.com
+      if (email.toLowerCase() === 'subhomghosh06@gmail.com') {
         router.push('/dashboard');
       } else {
         router.push('/user-dashboard');
