@@ -57,6 +57,14 @@
           "items": {
             "type": "string"
           }
+        },
+        "tenure": {
+          "type": "string",
+          "description": "The duration of the job contract."
+        },
+        "totalPayout": {
+          "type": "string",
+          "description": "The total payment for the entire job tenure."
         }
       },
       "required": [
@@ -174,6 +182,49 @@
         "timestamp": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "userName", "actionType", "timestamp"]
+    },
+    "Application": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Application",
+      "type": "object",
+      "description": "Represents a job application made by a worker.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the application."
+        },
+        "jobId": {
+          "type": "string",
+          "description": "Reference to the Job."
+        },
+        "workerId": {
+          "type": "string",
+          "description": "Reference to the Worker who applied."
+        },
+        "jobTitle": {
+          "type": "string",
+          "description": "Title of the job at the time of application."
+        },
+        "totalPayout": {
+          "type": "string",
+          "description": "Total payout for the job tenure."
+        },
+        "tenure": {
+          "type": "string",
+          "description": "The duration of the job."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Applied", "Selected", "Withdrawn", "Rejected"],
+          "description": "Current status of the application."
+        },
+        "appliedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the application was submitted."
+        }
+      },
+      "required": ["jobId", "workerId", "status", "appliedAt"]
     }
   },
   "auth": {
@@ -195,6 +246,14 @@
           "entityName": "Worker",
           "schema": { "$ref": "#/backend/entities/Worker" },
           "description": "Stores worker profiles and setup status."
+        }
+      },
+      {
+        "path": "/workers/{workerId}/applications/{applicationId}",
+        "definition": {
+          "entityName": "Application",
+          "schema": { "$ref": "#/backend/entities/Application" },
+          "description": "Stores job applications submitted by workers."
         }
       },
       {

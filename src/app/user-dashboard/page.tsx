@@ -1,7 +1,7 @@
 
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { 
   MapPin, 
@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
-import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 // Mock Data updated to show Total Amount based on Tenure
@@ -62,8 +62,8 @@ const mockJobs = [
     shortDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure.",
     fullDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure. Automate everything and ensure system reliability. You will work closely with development teams to ensure smooth deployments.",
     requirements: ["Kubernetes", "Terraform", "Jenkins/GitHub Actions"],
-    totalPayout: "₹32,00,000",
-    tenure: "12 Months (Full-time)",
+    totalPayout: "₹16,00,000",
+    tenure: "12 Months (Part-time)",
     location: "Remote / Hyderabad, Telangana",
     deadline: "2026-03-05",
     applicantsCount: 8,
@@ -97,13 +97,40 @@ const mockJobs = [
     applicantsCount: 9,
     coverImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1080",
     tags: ["Contract", "Mobile", "Flutter"]
+  },
+  {
+    id: "j6",
+    title: "Data Scientist",
+    shortDescription: "Analyze large datasets to extract actionable business insights.",
+    fullDescription: "As a Data Scientist, you will work with our product and business teams to analyze large datasets, build predictive models, and create data visualizations to drive strategic decisions.",
+    requirements: ["Python (Pandas, Scikit-learn)", "SQL", "Experience with ML models"],
+    totalPayout: "₹22,00,000",
+    tenure: "12 Months (Full-time)",
+    location: "Bangalore, Karnataka",
+    deadline: "2026-03-20",
+    applicantsCount: 18,
+    coverImage: "https://images.unsplash.com/photo-1551288049-bbda38a5f9ce?auto=format&fit=crop&q=80&w=1080",
+    tags: ["Full-time", "Data", "ML"]
+  },
+  {
+    id: "j7",
+    title: "Cloud Security Engineer",
+    shortDescription: "Secure our cloud infrastructure and implement best practices.",
+    fullDescription: "You will be responsible for designing and implementing security measures for our multi-cloud environment (AWS, GCP). This includes threat modeling, vulnerability assessments, and incident response.",
+    requirements: ["AWS/GCP Security", "Experience with IaC (Terraform)", "Knowledge of compliance frameworks"],
+    totalPayout: "₹25,00,000",
+    tenure: "12 Months (Full-time)",
+    location: "Remote",
+    deadline: "2026-03-18",
+    applicantsCount: 5,
+    coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1080",
+    tags: ["Full-time", "Security", "Cloud"]
   }
 ];
 
 export default function UserJobFeed() {
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [isApplying, setIsApplying] = useState(false);
-  const [appliedJobIds, setAppliedJobIds] = useState<string[]>([]);
   const { toast } = useToast();
   const { user } = useUser();
   const firestore = useFirestore();
@@ -113,13 +140,36 @@ export default function UserJobFeed() {
     return doc(firestore, 'workers', user.uid);
   }, [firestore, user?.uid]);
   const { data: workerProfile } = useDoc(workerRef);
+  
+  const applicationsRef = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    return collection(firestore, 'workers', user.uid, 'applications');
+  }, [firestore, user?.uid]);
 
-  const handleApply = (job: any) => {
+  const { data: applications, isLoading: isLoadingApplications } = useCollection(applicationsRef);
+  
+  const appliedJobIds = useMemo(() => {
+    if (!applications) return new Set<string>();
+    return new Set(applications.map(app => app.jobId));
+  }, [applications]);
+
+
+  const handleApply = async (job: any) => {
+    if (!user || !firestore || !workerProfile) return;
+    
     setIsApplying(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsApplying(false);
-      setAppliedJobIds(prev => [...prev, job.id]);
+    try {
+      const applicationsColRef = collection(firestore, 'workers', user.uid, 'applications');
+      await addDoc(applicationsColRef, {
+        jobId: job.id,
+        workerId: user.uid,
+        jobTitle: job.title,
+        totalPayout: job.totalPayout,
+        tenure: job.tenure,
+        status: 'Applied',
+        appliedAt: serverTimestamp(),
+      });
+      
       toast({
         title: "Application Submitted",
         description: `You have successfully applied for the ${job.title} position.`,
@@ -135,7 +185,16 @@ export default function UserJobFeed() {
           timestamp: serverTimestamp(),
         });
       }
-    }, 1500);
+    } catch (error) {
+       console.error("Error applying for job: ", error);
+       toast({
+         variant: 'destructive',
+         title: "Application Failed",
+         description: "Could not submit your application. Please try again.",
+       });
+    } finally {
+      setIsApplying(false);
+    }
   };
 
   return (
@@ -187,8 +246,9 @@ export default function UserJobFeed() {
                 variant="ghost" 
                 className="w-full text-xs font-semibold group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                 onClick={() => setSelectedJob(job)}
+                disabled={isLoadingApplications}
               >
-                {appliedJobIds.includes(job.id) ? "Applied" : "View Details"}
+                {appliedJobIds.has(job.id) ? "Applied" : "View Details"}
                 <ArrowRight className="ml-2 h-3 w-3" />
               </Button>
             </CardFooter>
@@ -269,12 +329,12 @@ export default function UserJobFeed() {
                         <Button 
                           className="w-full" 
                           onClick={() => handleApply(selectedJob)}
-                          disabled={isApplying || appliedJobIds.includes(selectedJob.id)}
+                          disabled={isApplying || appliedJobIds.has(selectedJob.id)}
                         >
-                          {isApplying ? "Submitting..." : appliedJobIds.includes(selectedJob.id) ? "Applied" : "Apply Now"}
+                          {isApplying ? "Submitting..." : appliedJobIds.has(selectedJob.id) ? "Applied" : "Apply Now"}
                         </Button>
                         <p className="text-[10px] text-center text-muted-foreground leading-tight">
-                          {appliedJobIds.includes(selectedJob.id) 
+                          {appliedJobIds.has(selectedJob.id)
                             ? "You have successfully applied for this project."
                             : "By applying, you agree to our terms of service and project completion policies."}
                         </p>
@@ -284,12 +344,12 @@ export default function UserJobFeed() {
                     <div className="space-y-4 px-2">
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Applications</span>
-                        <span className="font-bold">{appliedJobIds.includes(selectedJob.id) ? selectedJob.applicantsCount + 1 : selectedJob.applicantsCount}</span>
+                        <span className="font-bold">{appliedJobIds.has(selectedJob.id) ? selectedJob.applicantsCount + 1 : selectedJob.applicantsCount}</span>
                       </div>
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Project Status</span>
                         <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold text-[10px]">
-                          {appliedJobIds.includes(selectedJob.id) ? "SUBMITTED" : "OPEN"}
+                          {appliedJobIds.has(selectedJob.id) ? "SUBMITTED" : "OPEN"}
                         </Badge>
                       </div>
                     </div>
