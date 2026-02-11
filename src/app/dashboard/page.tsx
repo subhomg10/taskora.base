@@ -11,7 +11,7 @@ import {
   ArrowDownRight
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -48,13 +48,16 @@ const stats = [
 
 export default function DashboardOverview() {
   const firestore = useFirestore();
+  const { user, isUserLoading } = useUser();
 
   const activityLogsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || isUserLoading || !user) return null;
     return query(collection(firestore, 'activityLogs'), orderBy('timestamp', 'desc'), limit(10));
-  }, [firestore]);
+  }, [firestore, isUserLoading, user]);
 
-  const { data: activityLogs, isLoading } = useCollection(activityLogsQuery);
+  const { data: activityLogs, isLoading: isLogsLoading } = useCollection(activityLogsQuery);
+
+  const isLoading = isUserLoading || isLogsLoading;
 
   const getActivityMessage = (log: any) => {
     switch (log.actionType) {
