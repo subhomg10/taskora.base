@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -192,7 +191,7 @@ export default function ProfileSetupPage() {
                 </div>
                 <div className="space-y-2">
                   <Label>Username</Label>
-                  <Input value={formData.username} onChange={(e) => setFormData({...formData, username: e.target.value})} placeholder="@johndoe" />
+                  <Input value={formData.username} onChange={(e) => setFormData({...formData, username: e.target.value})} />
                 </div>
                 <div className="space-y-2">
                   <Label>Phone</Label>
