@@ -10,7 +10,6 @@ import {
   GraduationCap, 
   Wrench, 
   Link as LinkIcon, 
-  CheckCircle2, 
   ArrowRight, 
   ArrowLeft,
   Loader2
@@ -22,7 +21,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 
@@ -34,24 +32,44 @@ const STEPS = [
   { id: 'portfolio', title: 'Links', icon: LinkIcon },
 ];
 
+const DEGREES = [
+  "B.Tech", "B.E.", "BCA", "B.Sc", "M.Tech", "MCA", "M.Sc", 
+  "B.Com", "M.Com", "B.A.", "M.A.", "MBA", "PhD", "Other"
+];
+
+const SEMESTERS = [
+  "1st Semester", "2nd Semester", "3rd Semester", "4th Semester", 
+  "5th Semester", "6th Semester", "7th Semester", "8th Semester", 
+  "Completed"
+];
+
 const ROLE_CATEGORIES = [
   "Frontend Developer",
   "Backend Developer",
   "Full Stack Developer",
   "Android Developer",
+  "iOS Developer",
   "Web Developer",
-  "UI/UX / Graphic Designer",
+  "Game Developer",
+  "Software Engineer",
+  "Data Scientist",
+  "DevOps Engineer",
+  "UI/UX Designer",
+  "Graphic Designer",
+  "PPT Designer",
   "Video Editor",
+  "Photo Editor",
   "Photographer",
   "Other"
 ];
 
 const TECH_SKILLS = {
-  frontend: ["HTML", "CSS", "JS", "React", "Next", "Tailwind", "Bootstrap"],
-  backend: ["Node", "Express", "Django", "Flask", "Spring"],
-  database: ["MySQL", "PostgreSQL", "MongoDB", "Firebase"],
-  devops: ["Git", "Docker", "Linux", "AWS"],
-  nonTech: ["Canva", "Photoshop", "Illustrator", "Figma", "Premiere Pro", "After Effects", "DaVinci", "Lightroom"]
+  languages: ["C", "C++", "C#", "Python", "Java", "Rust", "Go", "PHP", "Ruby", "Swift", "Kotlin", "TypeScript"],
+  frontend: ["HTML", "CSS", "JS", "React", "Next", "Tailwind", "Angular", "Vue", "Svelte", "Redux", "Zustand"],
+  backend: ["Node", "Express", "Django", "Flask", "Spring", "FastAPI", "Laravel", "Ruby on Rails"],
+  database: ["MySQL", "PostgreSQL", "MongoDB", "Redis", "Oracle", "SQLite"],
+  devops: ["Git", "Docker", "Linux", "AWS", "GCP", "Azure", "Kubernetes", "CI/CD"],
+  creative: ["Canva", "Photoshop", "Illustrator", "Figma", "Premiere Pro", "After Effects", "DaVinci", "Lightroom", "PowerPoint", "Blender", "Unity", "Unreal Engine"]
 };
 
 export default function ProfileSetupPage() {
@@ -111,7 +129,6 @@ export default function ProfileSetupPage() {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
       if (workerRef) {
-        // Use setDocumentNonBlocking with merge: true to handle creation/update correctly
         setDocumentNonBlocking(workerRef, formData, { merge: true });
       }
     } else {
@@ -150,6 +167,15 @@ export default function ProfileSetupPage() {
   if (isUserLoading) return null;
 
   const progress = ((currentStep + 1) / STEPS.length) * 100;
+
+  const isDeveloper = formData.primaryRole.toLowerCase().includes('developer') || 
+                      formData.primaryRole.toLowerCase().includes('engineer') ||
+                      formData.primaryRole === 'Software Engineer' ||
+                      formData.primaryRole === 'Data Scientist';
+
+  const isCreative = formData.primaryRole.toLowerCase().includes('designer') || 
+                     formData.primaryRole.toLowerCase().includes('editor') || 
+                     formData.primaryRole === 'Photographer';
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-12 px-4">
@@ -234,11 +260,21 @@ export default function ProfileSetupPage() {
                     </div>
                     <div className="space-y-2">
                       <Label>Degree</Label>
-                      <Input value={formData.statusDetails.degree} onChange={(e) => setFormData({...formData, statusDetails: {...formData.statusDetails, degree: e.target.value}})} />
+                      <Select value={formData.statusDetails.degree} onValueChange={(val) => setFormData({...formData, statusDetails: {...formData.statusDetails, degree: val}})}>
+                        <SelectTrigger><SelectValue placeholder="Select Degree" /></SelectTrigger>
+                        <SelectContent>
+                          {DEGREES.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-2">
                       <Label>Semester</Label>
-                      <Input value={formData.statusDetails.semester} onChange={(e) => setFormData({...formData, statusDetails: {...formData.statusDetails, semester: e.target.value}})} />
+                      <Select value={formData.statusDetails.semester} onValueChange={(val) => setFormData({...formData, statusDetails: {...formData.statusDetails, semester: val}})}>
+                        <SelectTrigger><SelectValue placeholder="Select Semester" /></SelectTrigger>
+                        <SelectContent>
+                          {SEMESTERS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 ) : formData.currentStatus === 'Job' && (
@@ -252,8 +288,8 @@ export default function ProfileSetupPage() {
                       <Input value={formData.statusDetails.role} onChange={(e) => setFormData({...formData, statusDetails: {...formData.statusDetails, role: e.target.value}})} />
                     </div>
                     <div className="space-y-2">
-                      <Label>Years</Label>
-                      <Input value={formData.statusDetails.years} onChange={(e) => setFormData({...formData, statusDetails: {...formData.statusDetails, years: e.target.value}})} />
+                      <Label>Years of Experience</Label>
+                      <Input type="number" value={formData.statusDetails.years} onChange={(e) => setFormData({...formData, statusDetails: {...formData.statusDetails, years: e.target.value}})} />
                     </div>
                   </div>
                 )}
@@ -288,8 +324,16 @@ export default function ProfileSetupPage() {
             {currentStep === 3 && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2">
                 <div className="grid gap-6">
-                  {formData.primaryRole.includes('Developer') && (
+                  {isDeveloper && (
                     <>
+                      <div className="space-y-3">
+                        <Label className="text-xs font-bold uppercase text-muted-foreground">Languages</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {TECH_SKILLS.languages.map(skill => (
+                            <Badge key={skill} variant={formData.skills.includes(skill) ? "default" : "outline"} className="cursor-pointer py-1.5 px-3" onClick={() => toggleSkill(skill)}>{skill}</Badge>
+                          ))}
+                        </div>
+                      </div>
                       <div className="space-y-3">
                         <Label className="text-xs font-bold uppercase text-muted-foreground">Frontend Stack</Label>
                         <div className="flex flex-wrap gap-2">
@@ -306,18 +350,29 @@ export default function ProfileSetupPage() {
                           ))}
                         </div>
                       </div>
+                      <div className="space-y-3">
+                        <Label className="text-xs font-bold uppercase text-muted-foreground">DevOps</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {TECH_SKILLS.devops.map(skill => (
+                            <Badge key={skill} variant={formData.skills.includes(skill) ? "default" : "outline"} className="cursor-pointer py-1.5 px-3" onClick={() => toggleSkill(skill)}>{skill}</Badge>
+                          ))}
+                        </div>
+                      </div>
                     </>
                   )}
-                  {formData.primaryRole.includes('Designer') || formData.primaryRole.includes('Video') ? (
+                  
+                  {isCreative && (
                     <div className="space-y-3">
-                      <Label className="text-xs font-bold uppercase text-muted-foreground">Design & Creative Tools</Label>
+                      <Label className="text-xs font-bold uppercase text-muted-foreground">Creative & Design Tools</Label>
                       <div className="flex flex-wrap gap-2">
-                        {TECH_SKILLS.nonTech.map(skill => (
+                        {TECH_SKILLS.creative.map(skill => (
                           <Badge key={skill} variant={formData.skills.includes(skill) ? "default" : "outline"} className="cursor-pointer py-1.5 px-3" onClick={() => toggleSkill(skill)}>{skill}</Badge>
                         ))}
                       </div>
                     </div>
-                  ) : !formData.primaryRole.includes('Developer') && (
+                  )}
+
+                  {!isDeveloper && !isCreative && (
                      <div className="space-y-4">
                         <Label>Add Your Skills</Label>
                         <Input placeholder="Enter skills separated by commas..." onKeyDown={(e: any) => {
