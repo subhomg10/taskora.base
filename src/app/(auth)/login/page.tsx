@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -35,9 +36,9 @@ export default function LoginPage() {
       // Role-based redirection logic
       // admin: subhomghosh06@gmail.com
       if (email.toLowerCase() === 'subhomghosh06@gmail.com') {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       } else {
-        router.push('/user-dashboard');
+        router.replace('/user-dashboard');
       }
     } catch (error: any) {
       toast({
