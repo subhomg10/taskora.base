@@ -37,7 +37,7 @@ export default function UserWalletPage() {
             <CardTitle className="text-sm font-medium uppercase tracking-widest opacity-80">Total Balance</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="text-4xl font-bold">$4,250.00</div>
+            <div className="text-4xl font-bold">₹4,250.00</div>
             <p className="text-xs opacity-70">Available for immediate withdrawal</p>
           </CardContent>
         </Card>
@@ -51,14 +51,14 @@ export default function UserWalletPage() {
             <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-emerald-700 uppercase mb-1">Total Income</p>
-                <p className="text-2xl font-bold text-emerald-900">$1,700.00</p>
+                <p className="text-2xl font-bold text-emerald-900">₹1,700.00</p>
               </div>
               <ArrowUpRight className="h-8 w-8 text-emerald-500 opacity-40" />
             </div>
             <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-rose-700 uppercase mb-1">Total Withdrawals</p>
-                <p className="text-2xl font-bold text-rose-900">$2,000.00</p>
+                <p className="text-2xl font-bold text-rose-900">₹2,000.00</p>
               </div>
               <ArrowDownRight className="h-8 w-8 text-rose-500 opacity-40" />
             </div>

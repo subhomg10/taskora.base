@@ -48,7 +48,7 @@ export default function UserApplicationsPage() {
                     <Clock className="h-3 w-3" />
                     Applied on {app.appliedDate}
                   </span>
-                  <span className="font-medium text-foreground">Project Fee: ${app.payment.toLocaleString()}</span>
+                  <span className="font-medium text-foreground">Project Fee: ₹{app.payment.toLocaleString()}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -65,7 +65,7 @@ export default function UserApplicationsPage() {
           <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed rounded-xl bg-muted/20">
             <ClipboardList className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
             <p className="text-muted-foreground font-medium">No applications found.</p>
-            <Button variant="link" className="mt-2 text-primary" href="/user-dashboard">Browse Jobs</Button>
+            <Button variant="link" className="mt-2 text-primary">Browse Jobs</Button>
           </div>
         )}
       </div>

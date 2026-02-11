@@ -104,7 +104,7 @@ export default function UserJobFeed() {
               />
               <div className="absolute top-4 right-4">
                 <Badge className="bg-white/90 text-black backdrop-blur-sm border-none font-bold">
-                  ${job.payment.toLocaleString()}
+                  ₹{job.payment.toLocaleString()}
                 </Badge>
               </div>
             </div>
@@ -163,8 +163,7 @@ export default function UserJobFeed() {
                   <h2 className="text-3xl font-bold">{selectedJob.title}</h2>
                   <div className="flex items-center gap-4 mt-2">
                     <span className="flex items-center gap-1 text-sm font-medium">
-                      <DollarSign className="h-4 w-4" />
-                      {selectedJob.payment.toLocaleString()}
+                      ₹{selectedJob.payment.toLocaleString()}
                     </span>
                     <span className="flex items-center gap-1 text-sm font-medium opacity-80">
                       <MapPin className="h-4 w-4" />
@@ -199,7 +198,7 @@ export default function UserJobFeed() {
                       <CardContent className="p-6 space-y-4">
                         <div className="text-center space-y-1">
                           <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Payment Offer</p>
-                          <p className="text-3xl font-bold">${selectedJob.payment.toLocaleString()}</p>
+                          <p className="text-3xl font-bold">₹{selectedJob.payment.toLocaleString()}</p>
                         </div>
                         <Button 
                           className="w-full" 
