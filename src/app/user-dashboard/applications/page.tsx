@@ -1,4 +1,3 @@
-
 "use client"
 
 import React from 'react';
@@ -11,18 +10,20 @@ const myApplications = [
   {
     id: "app1",
     jobTitle: "Senior Software Engineer",
-    appliedDate: "Oct 24, 2023",
+    appliedDate: "Oct 24, 2025",
     status: "Selected",
     company: "Techora Systems",
-    payment: 220000
+    totalPayout: "₹28,00,000",
+    tenure: "12 Months"
   },
   {
     id: "app2",
     jobTitle: "UI/UX Designer",
-    appliedDate: "Oct 20, 2023",
+    appliedDate: "Oct 20, 2025",
     status: "Applied",
     company: "Creative Studio",
-    payment: 95000
+    totalPayout: "₹8,50,000",
+    tenure: "6 Months"
   }
 ];
 
@@ -48,7 +49,7 @@ export default function UserApplicationsPage() {
                     <Clock className="h-3 w-3" />
                     Applied on {app.appliedDate}
                   </span>
-                  <span className="font-medium text-foreground">Budget Offer: ₹{app.payment.toLocaleString()}</span>
+                  <span className="font-medium text-foreground">Total Payout: {app.totalPayout} ({app.tenure})</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">

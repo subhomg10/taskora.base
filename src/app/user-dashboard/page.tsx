@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState } from 'react';
@@ -24,7 +23,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 
-// Mock Data
+// Mock Data updated to show Total Amount based on Tenure
 const mockJobs = [
   {
     id: "j1",
@@ -32,8 +31,8 @@ const mockJobs = [
     shortDescription: "Develop scalable microservices and lead the frontend transition to Next.js.",
     fullDescription: "Develop scalable microservices and lead the frontend transition to Next.js. We need someone who understands clean architecture and has experience with high-load systems. You will be working with a high-performance team focusing on low-latency transactions.",
     requirements: ["8+ years React experience", "Deep knowledge of TypeScript", "Experience with AWS"],
-    salaryLPA: "24 - 32 LPA",
-    tenure: "Full-time (Permanent)",
+    totalPayout: "₹28,00,000",
+    tenure: "12 Months (Full-time)",
     location: "Remote / Bangalore, Karnataka",
     deadline: "2026-03-15",
     applicantsCount: 12,
@@ -46,8 +45,8 @@ const mockJobs = [
     shortDescription: "Create stunning user experiences for our next generation mobile application.",
     fullDescription: "Create stunning user experiences for our next generation mobile application. Focus on accessibility and user-centric design principles. You will be responsible for creating prototypes and conducting user testing.",
     requirements: ["Portfolio of web apps", "Figma mastery", "Design systems experience"],
-    salaryLPA: "12 - 18 LPA",
-    tenure: "6 Months Contract",
+    totalPayout: "₹8,50,000",
+    tenure: "6 Months (Contract)",
     location: "Mumbai, Maharashtra",
     deadline: "2026-03-22",
     applicantsCount: 24,
@@ -60,8 +59,8 @@ const mockJobs = [
     shortDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure.",
     fullDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure. Automate everything and ensure system reliability. You will work closely with development teams to ensure smooth deployments.",
     requirements: ["Kubernetes", "Terraform", "Jenkins/GitHub Actions"],
-    salaryLPA: "28 - 36 LPA",
-    tenure: "Full-time (Permanent)",
+    totalPayout: "₹32,00,000",
+    tenure: "12 Months (Full-time)",
     location: "Remote / Hyderabad, Telangana",
     deadline: "2026-03-05",
     applicantsCount: 8,
@@ -74,8 +73,8 @@ const mockJobs = [
     shortDescription: "Join our core product team to build and scale features using React and Node.js.",
     fullDescription: "Join our core product team to build and scale features using React and Node.js. You'll be responsible for end-to-end feature development, from database schema design to frontend implementation. Focus on building high-performance APIs.",
     requirements: ["Proficiency in React/Next.js", "Node.js/Express experience", "Familiarity with PostgreSQL"],
-    salaryLPA: "15 - 22 LPA",
-    tenure: "Full-time (Permanent)",
+    totalPayout: "₹18,50,000",
+    tenure: "12 Months (Full-time)",
     location: "Pune, Maharashtra",
     deadline: "2026-03-28",
     applicantsCount: 15,
@@ -88,8 +87,8 @@ const mockJobs = [
     shortDescription: "Develop high-performance cross-platform mobile applications.",
     fullDescription: "Develop high-performance cross-platform mobile applications for iOS and Android using Flutter. Focus on smooth animations, responsive UI, and robust state management for our consumer app.",
     requirements: ["Flutter & Dart mastery", "Experience with Firebase", "Published apps on Play Store/App Store"],
-    salaryLPA: "10 - 14 LPA",
-    tenure: "3 Months (Extendable)",
+    totalPayout: "₹3,50,000",
+    tenure: "3 Months (Contract)",
     location: "Remote / Noida, UP",
     deadline: "2026-03-10",
     applicantsCount: 9,
@@ -224,15 +223,16 @@ export default function UserJobFeed() {
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                               <Banknote className="h-3 w-3" />
-                              Annual Salary
+                              Total Project Value
                             </div>
-                            <p className="text-2xl font-bold">{selectedJob.salaryLPA}</p>
+                            <p className="text-2xl font-bold">{selectedJob.totalPayout}</p>
+                            <p className="text-[10px] text-muted-foreground leading-tight">Amount paid after completion of tenure</p>
                           </div>
                           
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                               <CalendarCheck className="h-3 w-3" />
-                              Job Tenure
+                              Job Duration
                             </div>
                             <p className="text-sm font-semibold">{selectedJob.tenure}</p>
                           </div>

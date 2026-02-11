@@ -1,4 +1,3 @@
-
 "use client"
 
 import React from 'react';
@@ -9,9 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const transactions = [
-  { id: "tx1", date: "Oct 25, 2023", description: "Payment for 'Landing Page Design'", amount: 125000, type: "Income" },
-  { id: "tx2", date: "Oct 22, 2023", description: "Withdrawal to HDFC Bank", amount: -80000, type: "Withdrawal" },
-  { id: "tx3", date: "Oct 15, 2023", description: "Bonus: Early Completion Milestone", amount: 15000, type: "Income" },
+  { id: "tx1", date: "Oct 25, 2025", description: "Payment for 'Landing Page Design'", amount: 125000, type: "Income" },
+  { id: "tx2", date: "Oct 22, 2025", description: "Withdrawal to HDFC Bank", amount: -80000, type: "Withdrawal" },
+  { id: "tx3", date: "Oct 15, 2025", description: "Bonus: Early Completion Milestone", amount: 15000, type: "Income" },
 ];
 
 export default function UserWalletPage() {
