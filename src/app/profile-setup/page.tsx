@@ -145,12 +145,13 @@ export default function ProfileSetupPage() {
     setIsSubmitting(true);
     try {
       const finalData = { ...formData, profileCompleted: true };
+      // Explicitly set the document and wait for it before redirecting
       await setDoc(workerRef, finalData, { merge: true });
       toast({ title: "Profile Completed", description: "Welcome to Taskora!" });
+      // Direct replacement of route to the user dashboard
       router.replace('/user-dashboard');
     } catch (error: any) {
       toast({ variant: "destructive", title: "Setup Error", description: error.message });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -164,7 +165,11 @@ export default function ProfileSetupPage() {
     }));
   };
 
-  if (isUserLoading) return null;
+  if (isUserLoading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    </div>
+  );
 
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
@@ -419,12 +424,15 @@ export default function ProfileSetupPage() {
             )}
           </CardContent>
           <CardFooter className="flex justify-between border-t p-6">
-            <Button variant="ghost" onClick={handleBack} disabled={currentStep === 0}>
+            <Button variant="ghost" onClick={handleBack} disabled={currentStep === 0 || isSubmitting}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
             <Button onClick={handleNext} disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : (currentStep === STEPS.length - 1 ? 'Complete Setup' : 'Next')}
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
+              {currentStep === STEPS.length - 1 ? 'Complete Setup' : 'Next'}
               {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
             </Button>
           </CardFooter>
