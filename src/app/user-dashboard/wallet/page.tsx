@@ -9,9 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const transactions = [
-  { id: "tx1", date: "Oct 25, 2023", description: "Payment for 'Landing Page Design'", amount: 1500, type: "Income" },
-  { id: "tx2", date: "Oct 22, 2023", description: "Withdrawal to Bank Account", amount: -2000, type: "Withdrawal" },
-  { id: "tx3", date: "Oct 15, 2023", description: "Bonus: Early Completion", amount: 200, type: "Income" },
+  { id: "tx1", date: "Oct 25, 2023", description: "Payment for 'Landing Page Design'", amount: 125000, type: "Income" },
+  { id: "tx2", date: "Oct 22, 2023", description: "Withdrawal to HDFC Bank", amount: -80000, type: "Withdrawal" },
+  { id: "tx3", date: "Oct 15, 2023", description: "Bonus: Early Completion Milestone", amount: 15000, type: "Income" },
 ];
 
 export default function UserWalletPage() {
@@ -37,7 +37,7 @@ export default function UserWalletPage() {
             <CardTitle className="text-sm font-medium uppercase tracking-widest opacity-80">Total Balance</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="text-4xl font-bold">₹4,250.00</div>
+            <div className="text-4xl font-bold">₹1,60,000.00</div>
             <p className="text-xs opacity-70">Available for immediate withdrawal</p>
           </CardContent>
         </Card>
@@ -51,14 +51,14 @@ export default function UserWalletPage() {
             <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-emerald-700 uppercase mb-1">Total Income</p>
-                <p className="text-2xl font-bold text-emerald-900">₹1,700.00</p>
+                <p className="text-2xl font-bold text-emerald-900">₹1,40,000.00</p>
               </div>
               <ArrowUpRight className="h-8 w-8 text-emerald-500 opacity-40" />
             </div>
             <div className="p-4 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-rose-700 uppercase mb-1">Total Withdrawals</p>
-                <p className="text-2xl font-bold text-rose-900">₹2,000.00</p>
+                <p className="text-2xl font-bold text-rose-900">₹80,000.00</p>
               </div>
               <ArrowDownRight className="h-8 w-8 text-rose-500 opacity-40" />
             </div>
@@ -88,15 +88,15 @@ export default function UserWalletPage() {
           <TableBody>
             {transactions.map((tx) => (
               <TableRow key={tx.id} className="hover:bg-muted/20 transition-colors">
-                <TableCell className="font-medium py-4">{tx.description}</TableCell>
+                <TableCell className="font-medium py-4 text-sm">{tx.description}</TableCell>
                 <TableCell className="text-muted-foreground text-xs">{tx.date}</TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={tx.amount > 0 ? "text-emerald-600 bg-emerald-50 border-emerald-100" : "text-rose-600 bg-rose-50 border-rose-100"}>
+                  <Badge variant="outline" className={tx.amount > 0 ? "text-emerald-600 bg-emerald-50 border-emerald-100 font-bold" : "text-rose-600 bg-rose-50 border-rose-100 font-bold"}>
                     {tx.type}
                   </Badge>
                 </TableCell>
                 <TableCell className={`text-right pr-6 font-bold ${tx.amount > 0 ? "text-emerald-600" : "text-rose-600"}`}>
-                  {tx.amount > 0 ? "+" : ""}{tx.amount.toLocaleString()}.00
+                  {tx.amount > 0 ? "+" : ""}₹{tx.amount.toLocaleString()}.00
                 </TableCell>
               </TableRow>
             ))}

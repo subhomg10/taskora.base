@@ -39,6 +39,7 @@ const mockJobs = [
     location: "Remote / Bangalore, Karnataka",
     postedAt: "2 days ago",
     deadline: "2026-03-15",
+    payment: 225000,
     tags: ["Full-time", "React", "Senior"],
     applicants: [
       { id: "a1", name: "Alex Rivera", skills: "React, Node.js, TS", rating: 4.8, photo: "https://picsum.photos/seed/w1/200/200" },
@@ -55,6 +56,7 @@ const mockJobs = [
     location: "Mumbai, Maharashtra",
     postedAt: "5 days ago",
     deadline: "2026-03-22",
+    payment: 115000,
     tags: ["Contract", "Design", "Figma"],
     applicants: [
       { id: "a4", name: "Emma Watson", skills: "UI, UX, Prototyping", rating: 4.7, photo: "https://picsum.photos/seed/w4/200/200" }
@@ -70,6 +72,7 @@ const mockJobs = [
     location: "Remote / Hyderabad, Telangana",
     postedAt: "1 week ago",
     deadline: "2026-03-05",
+    payment: 185000,
     tags: ["Part-time", "Cloud", "Security"],
     applicants: []
   },
@@ -83,6 +86,7 @@ const mockJobs = [
     location: "Pune, Maharashtra",
     postedAt: "1 day ago",
     deadline: "2026-03-28",
+    payment: 145000,
     tags: ["Full-time", "Next.js", "Node"],
     applicants: []
   },
@@ -96,6 +100,7 @@ const mockJobs = [
     location: "Remote / Noida, UP",
     postedAt: "3 days ago",
     deadline: "2026-03-10",
+    payment: 95000,
     tags: ["Contract", "Mobile", "Flutter"],
     applicants: []
   },
@@ -109,6 +114,7 @@ const mockJobs = [
     location: "Chennai, Tamil Nadu",
     postedAt: "4 days ago",
     deadline: "2026-03-18",
+    payment: 195000,
     tags: ["Full-time", "AI", "Data"],
     applicants: []
   },
@@ -122,6 +128,7 @@ const mockJobs = [
     location: "Remote / Ahmedabad, Gujarat",
     postedAt: "6 days ago",
     deadline: "2026-03-30",
+    payment: 165000,
     tags: ["Full-time", "Security", "Cloud"],
     applicants: []
   }
@@ -199,6 +206,11 @@ export default function JobListingsPage() {
                 className="object-cover" 
                 data-ai-hint="job cover"
               />
+              <div className="absolute top-4 right-4">
+                <Badge className="bg-black/60 text-white backdrop-blur-md border-none font-bold">
+                  ₹{(job.payment / 1000).toFixed(0)}K
+                </Badge>
+              </div>
             </div>
             <CardHeader>
               <div className="flex items-center justify-between mb-2">
@@ -351,6 +363,10 @@ export default function JobListingsPage() {
                   </Card>
 
                   <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Budget</span>
+                      <span className="font-bold">₹{selectedJob.payment.toLocaleString()}</span>
+                    </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Status</span>
                       <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-200">ACTIVE</Badge>

@@ -29,7 +29,7 @@ const mockJobs = [
     shortDescription: "Develop scalable microservices and lead the frontend transition to Next.js.",
     fullDescription: "Develop scalable microservices and lead the frontend transition to Next.js. We need someone who understands clean architecture and has experience with high-load systems. You will be working with a high-performance team focusing on low-latency transactions.",
     requirements: ["8+ years React experience", "Deep knowledge of TypeScript", "Experience with AWS"],
-    payment: 12000,
+    payment: 220000,
     location: "Remote / Bangalore, Karnataka",
     deadline: "2026-03-15",
     applicantsCount: 12,
@@ -42,7 +42,7 @@ const mockJobs = [
     shortDescription: "Create stunning user experiences for our next generation mobile application.",
     fullDescription: "Create stunning user experiences for our next generation mobile application. Focus on accessibility and user-centric design principles. You will be responsible for creating prototypes and conducting user testing.",
     requirements: ["Portfolio of web apps", "Figma mastery", "Design systems experience"],
-    payment: 8500,
+    payment: 95000,
     location: "Mumbai, Maharashtra",
     deadline: "2026-03-22",
     applicantsCount: 24,
@@ -55,12 +55,12 @@ const mockJobs = [
     shortDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure.",
     fullDescription: "Build and maintain our CI/CD pipelines and Kubernetes infrastructure. Automate everything and ensure system reliability. You will work closely with development teams to ensure smooth deployments.",
     requirements: ["Kubernetes", "Terraform", "Jenkins/GitHub Actions"],
-    payment: 15000,
+    payment: 180000,
     location: "Remote / Hyderabad, Telangana",
     deadline: "2026-03-05",
     applicantsCount: 8,
     coverImage: "https://images.unsplash.com/photo-1636673341470-54f37c461457?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Full-time", "Cloud"]
+    tags: ["Part-time", "Cloud"]
   },
   {
     id: "j4",
@@ -68,7 +68,7 @@ const mockJobs = [
     shortDescription: "Join our core product team to build and scale features using React and Node.js.",
     fullDescription: "Join our core product team to build and scale features using React and Node.js. You'll be responsible for end-to-end feature development, from database schema design to frontend implementation. Focus on building high-performance APIs.",
     requirements: ["Proficiency in React/Next.js", "Node.js/Express experience", "Familiarity with PostgreSQL"],
-    payment: 9500,
+    payment: 145000,
     location: "Pune, Maharashtra",
     deadline: "2026-03-28",
     applicantsCount: 15,
@@ -81,7 +81,7 @@ const mockJobs = [
     shortDescription: "Develop high-performance cross-platform mobile applications.",
     fullDescription: "Develop high-performance cross-platform mobile applications for iOS and Android using Flutter. Focus on smooth animations, responsive UI, and robust state management for our consumer app.",
     requirements: ["Flutter & Dart mastery", "Experience with Firebase", "Published apps on Play Store/App Store"],
-    payment: 11000,
+    payment: 85000,
     location: "Remote / Noida, UP",
     deadline: "2026-03-10",
     applicantsCount: 9,
@@ -94,7 +94,7 @@ const mockJobs = [
     shortDescription: "Apply machine learning models to solve complex business problems.",
     fullDescription: "Apply machine learning models to solve complex business problems. You will be working with large datasets to extract insights, build predictive models, and optimize our recommendation engine.",
     requirements: ["Python & R proficiency", "TensorFlow/PyTorch experience", "Strong Math/Stats background"],
-    payment: 14000,
+    payment: 190000,
     location: "Chennai, Tamil Nadu",
     deadline: "2026-03-18",
     applicantsCount: 5,
@@ -107,7 +107,7 @@ const mockJobs = [
     shortDescription: "Secure our cloud infrastructure and manage identity access.",
     fullDescription: "Secure our cloud infrastructure and manage identity access across multi-cloud environments. You will be auditing our AWS/GCP setup, implementing security best practices, and managing compliance.",
     requirements: ["Security certifications (CISSP/CCSP)", "Hands-on AWS/Azure Security", "Network security knowledge"],
-    payment: 13000,
+    payment: 165000,
     location: "Remote / Ahmedabad, Gujarat",
     deadline: "2026-03-30",
     applicantsCount: 4,
@@ -153,7 +153,7 @@ export default function UserJobFeed() {
                 data-ai-hint="job cover"
               />
               <div className="absolute top-4 right-4">
-                <Badge className="bg-white/90 text-black backdrop-blur-sm border-none font-bold">
+                <Badge className="bg-white/90 text-black backdrop-blur-sm border-none font-bold shadow-lg">
                   ₹{job.payment.toLocaleString()}
                 </Badge>
               </div>
@@ -247,7 +247,7 @@ export default function UserJobFeed() {
                     <Card className="border shadow-none bg-muted/20">
                       <CardContent className="p-6 space-y-4">
                         <div className="text-center space-y-1">
-                          <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Payment Offer</p>
+                          <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Compensation</p>
                           <p className="text-3xl font-bold">₹{selectedJob.payment.toLocaleString()}</p>
                         </div>
                         <Button 

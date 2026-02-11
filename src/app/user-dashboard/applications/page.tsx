@@ -14,7 +14,7 @@ const myApplications = [
     appliedDate: "Oct 24, 2023",
     status: "Selected",
     company: "Techora Systems",
-    payment: 12000
+    payment: 220000
   },
   {
     id: "app2",
@@ -22,7 +22,7 @@ const myApplications = [
     appliedDate: "Oct 20, 2023",
     status: "Applied",
     company: "Creative Studio",
-    payment: 8500
+    payment: 95000
   }
 ];
 
@@ -48,7 +48,7 @@ export default function UserApplicationsPage() {
                     <Clock className="h-3 w-3" />
                     Applied on {app.appliedDate}
                   </span>
-                  <span className="font-medium text-foreground">Project Fee: ₹{app.payment.toLocaleString()}</span>
+                  <span className="font-medium text-foreground">Budget Offer: ₹{app.payment.toLocaleString()}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
