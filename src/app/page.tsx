@@ -1,6 +1,5 @@
-
 "use client"
-
+ 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -10,6 +9,13 @@ export default function Home() {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
+
+  useEffect(() => {
+    console.log("AUTH USER OBJECT:", user);
+    console.log("AUTH UID:", user?.uid);
+    console.log("AUTH EMAIL:", user?.email);
+  }, [user]);
+
 
   const workerRef = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;

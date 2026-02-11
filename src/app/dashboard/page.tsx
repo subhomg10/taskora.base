@@ -51,7 +51,7 @@ export default function DashboardOverview() {
 
   const activityLogsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'activityLogs'), orderBy('timestamp', 'desc'), limit(5));
+    return query(collection(firestore, 'activityLogs'), orderBy('timestamp', 'desc'), limit(10));
   }, [firestore]);
 
   const { data: activityLogs, isLoading } = useCollection(activityLogsQuery);
@@ -68,19 +68,6 @@ export default function DashboardOverview() {
         return <><span className="font-semibold text-foreground">{log.userName}</span> performed an action.</>;
     }
   };
-  
-  const dummyActivities = [
-      { id: 'd1', userName: 'Priya Sharma', actionType: 'verification_request', timestamp: new Date(Date.now() - 2 * 60 * 1000) },
-      { id: 'd2', userName: 'John Smith', actionType: 'job_application', details: 'Applied for "UI/UX Designer"', timestamp: new Date(Date.now() - 15 * 60 * 1000) },
-      { id: 'd3', userName: 'Aarav Patel', actionType: 'login', timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000) },
-      { id: 'd4', userName: 'Emily White', actionType: 'verification_request', timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
-  ];
-
-  const combinedLogs = [...(activityLogs || [])]
-    .sort((a, b) => (b.timestamp?.toDate?.() || b.timestamp) - (a.timestamp?.toDate?.() || a.timestamp))
-    .slice(0, 5);
-
-  const displayLogs = (activityLogs && activityLogs.length > 0) ? combinedLogs : dummyActivities;
 
   return (
     <div className="space-y-8">
@@ -133,18 +120,18 @@ export default function DashboardOverview() {
                   <span className="text-xs bg-muted h-3 w-1/4 rounded-md animate-pulse"></span>
                 </div>
               ))}
-              {!isLoading && displayLogs.map((log: any) => (
+              {!isLoading && activityLogs && activityLogs.map((log: any) => (
                 <div key={log.id} className="flex items-center gap-4 text-sm">
                   <div className="h-2 w-2 rounded-full bg-accent" />
                   <p className="flex-1 text-muted-foreground">
                     {getActivityMessage(log)}
                   </p>
                   <span className="text-xs text-muted-foreground">
-                    {log.timestamp ? formatDistanceToNow(log.timestamp.toDate ? log.timestamp.toDate() : log.timestamp, { addSuffix: true }) : ''}
+                    {log.timestamp ? formatDistanceToNow(log.timestamp.toDate(), { addSuffix: true }) : ''}
                   </span>
                 </div>
               ))}
-               {!isLoading && displayLogs.length === 0 && (
+               {!isLoading && (!activityLogs || activityLogs.length === 0) && (
                 <p className="text-sm text-muted-foreground text-center py-4">No recent activity.</p>
               )}
             </div>
