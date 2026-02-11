@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState } from 'react';
@@ -100,17 +101,18 @@ const mockJobs = [
 export default function UserJobFeed() {
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [isApplying, setIsApplying] = useState(false);
+  const [appliedJobIds, setAppliedJobIds] = useState<string[]>([]);
   const { toast } = useToast();
 
-  const handleApply = (jobTitle: string) => {
+  const handleApply = (job: any) => {
     setIsApplying(true);
     // Simulate API call
     setTimeout(() => {
       setIsApplying(false);
-      setSelectedJob(null);
+      setAppliedJobIds(prev => [...prev, job.id]);
       toast({
         title: "Application Submitted",
-        description: `You have successfully applied for the ${jobTitle} position.`,
+        description: `You have successfully applied for the ${job.title} position.`,
       });
     }, 1500);
   };
@@ -165,7 +167,7 @@ export default function UserJobFeed() {
                 className="w-full text-xs font-semibold group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                 onClick={() => setSelectedJob(job)}
               >
-                View Details
+                {appliedJobIds.includes(job.id) ? "Applied" : "View Details"}
                 <ArrowRight className="ml-2 h-3 w-3" />
               </Button>
             </CardFooter>
@@ -245,13 +247,15 @@ export default function UserJobFeed() {
 
                         <Button 
                           className="w-full" 
-                          onClick={() => handleApply(selectedJob.title)}
-                          disabled={isApplying}
+                          onClick={() => handleApply(selectedJob)}
+                          disabled={isApplying || appliedJobIds.includes(selectedJob.id)}
                         >
-                          {isApplying ? "Submitting..." : "Apply Now"}
+                          {isApplying ? "Submitting..." : appliedJobIds.includes(selectedJob.id) ? "Applied" : "Apply Now"}
                         </Button>
                         <p className="text-[10px] text-center text-muted-foreground leading-tight">
-                          By applying, you agree to our terms of service and project completion policies.
+                          {appliedJobIds.includes(selectedJob.id) 
+                            ? "You have successfully applied for this project."
+                            : "By applying, you agree to our terms of service and project completion policies."}
                         </p>
                       </CardContent>
                     </Card>
@@ -259,11 +263,13 @@ export default function UserJobFeed() {
                     <div className="space-y-4 px-2">
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Applications</span>
-                        <span className="font-bold">{selectedJob.applicantsCount}</span>
+                        <span className="font-bold">{appliedJobIds.includes(selectedJob.id) ? selectedJob.applicantsCount + 1 : selectedJob.applicantsCount}</span>
                       </div>
                       <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Project Status</span>
-                        <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold text-[10px]">OPEN</Badge>
+                        <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold text-[10px]">
+                          {appliedJobIds.includes(selectedJob.id) ? "SUBMITTED" : "OPEN"}
+                        </Badge>
                       </div>
                     </div>
                   </div>
