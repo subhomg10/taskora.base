@@ -1,7 +1,6 @@
 
 "use client"
 
-import { useAuth } from "@/lib/auth-context"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { ShieldCheck } from "lucide-react"
@@ -11,19 +10,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { loading } = useAuth()
-
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center animate-pulse">
-          <ShieldCheck className="mx-auto h-12 w-12 text-primary mb-4" />
-          <p className="text-muted-foreground font-medium">Initializing Admin Workspace...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
