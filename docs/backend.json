@@ -1,4 +1,3 @@
-
 {
   "entities": {
     "Job": {
@@ -160,6 +159,21 @@
         }
       },
       "required": ["id", "name", "email"]
+    },
+    "ActivityLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ActivityLog",
+      "type": "object",
+      "description": "Represents a single user activity event.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "actionType": { "type": "string", "enum": ["login", "job_application", "verification_request"] },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "actionType", "timestamp"]
     }
   },
   "auth": {
@@ -189,6 +203,14 @@
           "entityName": "Admin",
           "schema": { "type": "object" },
           "description": "Indicates admin role."
+        }
+      },
+       {
+        "path": "/activityLogs/{logId}",
+        "definition": {
+          "entityName": "ActivityLog",
+          "schema": { "$ref": "#/backend/entities/ActivityLog" },
+          "description": "Stores a feed of user activities for the admin dashboard."
         }
       }
     ]

@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 // Mock Data updated to show Total Amount based on Tenure
 const mockJobs = [
@@ -103,6 +105,14 @@ export default function UserJobFeed() {
   const [isApplying, setIsApplying] = useState(false);
   const [appliedJobIds, setAppliedJobIds] = useState<string[]>([]);
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const workerRef = useMemoFirebase(() => {
+    if (!firestore || !user?.uid) return null;
+    return doc(firestore, 'workers', user.uid);
+  }, [firestore, user?.uid]);
+  const { data: workerProfile } = useDoc(workerRef);
 
   const handleApply = (job: any) => {
     setIsApplying(true);
@@ -114,6 +124,17 @@ export default function UserJobFeed() {
         title: "Application Submitted",
         description: `You have successfully applied for the ${job.title} position.`,
       });
+
+      // Log activity
+      if (user && workerProfile) {
+        addDoc(collection(firestore, 'activityLogs'), {
+          userId: user.uid,
+          userName: workerProfile.name || user.email,
+          actionType: 'job_application',
+          details: `Applied for "${job.title}"`,
+          timestamp: serverTimestamp(),
+        });
+      }
     }, 1500);
   };
 

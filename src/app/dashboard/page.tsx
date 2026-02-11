@@ -11,6 +11,9 @@ import {
   ArrowDownRight
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { formatDistanceToNow } from 'date-fns';
 
 const stats = [
   {
@@ -44,6 +47,41 @@ const stats = [
 ];
 
 export default function DashboardOverview() {
+  const firestore = useFirestore();
+
+  const activityLogsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'activityLogs'), orderBy('timestamp', 'desc'), limit(5));
+  }, [firestore]);
+
+  const { data: activityLogs, isLoading } = useCollection(activityLogsQuery);
+
+  const getActivityMessage = (log: any) => {
+    switch (log.actionType) {
+      case 'login':
+        return <><span className="font-semibold text-foreground">{log.userName}</span> just logged in.</>;
+      case 'job_application':
+        return <><span className="font-semibold text-foreground">{log.userName}</span> {log.details.toLowerCase()}.</>;
+      case 'verification_request':
+        return <><span className="font-semibold text-foreground">{log.userName}</span> submitted a verification request.</>;
+      default:
+        return <><span className="font-semibold text-foreground">{log.userName}</span> performed an action.</>;
+    }
+  };
+  
+  const dummyActivities = [
+      { id: 'd1', userName: 'Priya Sharma', actionType: 'verification_request', timestamp: new Date(Date.now() - 2 * 60 * 1000) },
+      { id: 'd2', userName: 'John Smith', actionType: 'job_application', details: 'Applied for "UI/UX Designer"', timestamp: new Date(Date.now() - 15 * 60 * 1000) },
+      { id: 'd3', userName: 'Aarav Patel', actionType: 'login', timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000) },
+      { id: 'd4', userName: 'Emily White', actionType: 'verification_request', timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
+  ];
+
+  const combinedLogs = [...(activityLogs || [])]
+    .sort((a, b) => (b.timestamp?.toDate?.() || b.timestamp) - (a.timestamp?.toDate?.() || a.timestamp))
+    .slice(0, 5);
+
+  const displayLogs = (activityLogs && activityLogs.length > 0) ? combinedLogs : dummyActivities;
+
   return (
     <div className="space-y-8">
       <div>
@@ -88,15 +126,27 @@ export default function DashboardOverview() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[1, 2, 3, 4].map((i) => (
+              {isLoading && [1, 2, 3, 4].map((i) => (
                 <div key={i} className="flex items-center gap-4 text-sm">
-                  <div className="h-2 w-2 rounded-full bg-accent" />
-                  <p className="flex-1">
-                    <span className="font-semibold text-foreground">New worker verification request</span> from Mark Johnson.
-                  </p>
-                  <span className="text-xs text-muted-foreground">2m ago</span>
+                  <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                  <p className="flex-1 bg-muted h-4 w-3/4 rounded-md animate-pulse"></p>
+                  <span className="text-xs bg-muted h-3 w-1/4 rounded-md animate-pulse"></span>
                 </div>
               ))}
+              {!isLoading && displayLogs.map((log: any) => (
+                <div key={log.id} className="flex items-center gap-4 text-sm">
+                  <div className="h-2 w-2 rounded-full bg-accent" />
+                  <p className="flex-1 text-muted-foreground">
+                    {getActivityMessage(log)}
+                  </p>
+                  <span className="text-xs text-muted-foreground">
+                    {log.timestamp ? formatDistanceToNow(log.timestamp.toDate ? log.timestamp.toDate() : log.timestamp, { addSuffix: true }) : ''}
+                  </span>
+                </div>
+              ))}
+               {!isLoading && displayLogs.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">No recent activity.</p>
+              )}
             </div>
           </CardContent>
         </Card>

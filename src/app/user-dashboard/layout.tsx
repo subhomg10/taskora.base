@@ -1,13 +1,13 @@
 
 "use client"
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserSidebarNav } from "@/components/user-dashboard/sidebar-nav"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { ShieldCheck } from "lucide-react"
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { doc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 export default function UserDashboardLayout({
   children,
@@ -17,6 +17,7 @@ export default function UserDashboardLayout({
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
+  const [hasLoggedLogin, setHasLoggedLogin] = useState(false);
 
   const workerRef = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
@@ -38,6 +39,19 @@ export default function UserDashboardLayout({
       }
     }
   }, [user, isUserLoading, workerProfile, isProfileLoading, router]);
+
+  useEffect(() => {
+    if (user && workerProfile && !isUserLoading && !isProfileLoading && !hasLoggedLogin) {
+      addDoc(collection(firestore, "activityLogs"), {
+        userId: user.uid,
+        userName: workerProfile.name || user.email,
+        actionType: "login",
+        details: "User logged in",
+        timestamp: serverTimestamp(),
+      });
+      setHasLoggedLogin(true);
+    }
+  }, [user, workerProfile, isUserLoading, isProfileLoading, firestore, hasLoggedLogin]);
 
   // If loading or redirecting, show spinner
   if (isUserLoading || isProfileLoading || !user || (!workerProfile?.profileCompleted && user?.email !== 'subhomghosh06@gmail.com')) {
