@@ -186,7 +186,10 @@ export default function UserJobFeed() {
                 />
                 <div className="absolute inset-0 bg-black/40" />
                 <div className="absolute bottom-6 left-8 text-white">
-                  <h2 className="text-3xl font-bold">{selectedJob.title}</h2>
+                  <DialogTitle className="text-3xl font-bold">{selectedJob.title}</DialogTitle>
+                  <DialogDescription className="sr-only">
+                    {selectedJob.shortDescription}
+                  </DialogDescription>
                   <div className="flex items-center gap-4 mt-2">
                     <span className="flex items-center gap-1 text-sm font-medium">
                       <MapPin className="h-4 w-4" />

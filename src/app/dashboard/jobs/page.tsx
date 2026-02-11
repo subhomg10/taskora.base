@@ -232,7 +232,10 @@ export default function JobListingsPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-6 left-8 text-white">
-                  <h2 className="text-3xl font-bold">{selectedJob.title}</h2>
+                  <DialogTitle className="text-3xl font-bold">{selectedJob.title}</DialogTitle>
+                  <DialogDescription className="sr-only">
+                    {selectedJob.description.substring(0, 100)}...
+                  </DialogDescription>
                   <div className="flex gap-2 mt-2">
                     {selectedJob.tags.map((t: string) => <Badge key={t} className="bg-white/20 hover:bg-white/30 text-white border-none">{t}</Badge>)}
                   </div>
