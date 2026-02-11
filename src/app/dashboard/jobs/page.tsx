@@ -10,7 +10,9 @@ import {
   Users, 
   Star, 
   Mail, 
-  Tag
+  Tag,
+  Clock,
+  Banknote
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,7 +41,8 @@ const mockJobs = [
     location: "Remote / Bangalore, Karnataka",
     postedAt: "2 days ago",
     deadline: "2026-03-15",
-    payment: 225000,
+    salaryLPA: "24 - 32 LPA",
+    tenure: "Full-time (Permanent)",
     tags: ["Full-time", "React", "Senior"],
     applicants: [
       { id: "a1", name: "Alex Rivera", skills: "React, Node.js, TS", rating: 4.8, photo: "https://picsum.photos/seed/w1/200/200" },
@@ -56,7 +59,8 @@ const mockJobs = [
     location: "Mumbai, Maharashtra",
     postedAt: "5 days ago",
     deadline: "2026-03-22",
-    payment: 115000,
+    salaryLPA: "12 - 18 LPA",
+    tenure: "6 Months Contract",
     tags: ["Contract", "Design", "Figma"],
     applicants: [
       { id: "a4", name: "Emma Watson", skills: "UI, UX, Prototyping", rating: 4.7, photo: "https://picsum.photos/seed/w4/200/200" }
@@ -72,7 +76,8 @@ const mockJobs = [
     location: "Remote / Hyderabad, Telangana",
     postedAt: "1 week ago",
     deadline: "2026-03-05",
-    payment: 185000,
+    salaryLPA: "28 - 36 LPA",
+    tenure: "Full-time (Permanent)",
     tags: ["Part-time", "Cloud", "Security"],
     applicants: []
   },
@@ -86,7 +91,8 @@ const mockJobs = [
     location: "Pune, Maharashtra",
     postedAt: "1 day ago",
     deadline: "2026-03-28",
-    payment: 145000,
+    salaryLPA: "15 - 22 LPA",
+    tenure: "Full-time (Permanent)",
     tags: ["Full-time", "Next.js", "Node"],
     applicants: []
   },
@@ -100,7 +106,8 @@ const mockJobs = [
     location: "Remote / Noida, UP",
     postedAt: "3 days ago",
     deadline: "2026-03-10",
-    payment: 95000,
+    salaryLPA: "10 - 14 LPA",
+    tenure: "3 Months (Extendable)",
     tags: ["Contract", "Mobile", "Flutter"],
     applicants: []
   },
@@ -114,22 +121,9 @@ const mockJobs = [
     location: "Chennai, Tamil Nadu",
     postedAt: "4 days ago",
     deadline: "2026-03-18",
-    payment: 195000,
+    salaryLPA: "20 - 30 LPA",
+    tenure: "Full-time (Permanent)",
     tags: ["Full-time", "AI", "Data"],
-    applicants: []
-  },
-  {
-    id: "j7",
-    title: "Cloud Security Engineer",
-    description: "Secure our cloud infrastructure and manage identity access across AWS and GCP environments.",
-    requirements: ["Security certifications (CISSP/CCSP)", "Hands-on AWS/Azure Security", "Network auditing experience"],
-    coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1080",
-    applicantsCount: 4,
-    location: "Remote / Ahmedabad, Gujarat",
-    postedAt: "6 days ago",
-    deadline: "2026-03-30",
-    payment: 165000,
-    tags: ["Full-time", "Security", "Cloud"],
     applicants: []
   }
 ];
@@ -206,11 +200,6 @@ export default function JobListingsPage() {
                 className="object-cover" 
                 data-ai-hint="job cover"
               />
-              <div className="absolute top-4 right-4">
-                <Badge className="bg-black/60 text-white backdrop-blur-md border-none font-bold">
-                  ₹{(job.payment / 1000).toFixed(0)}K
-                </Badge>
-              </div>
             </div>
             <CardHeader>
               <div className="flex items-center justify-between mb-2">
@@ -362,26 +351,38 @@ export default function JobListingsPage() {
                     </CardContent>
                   </Card>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Budget</span>
-                      <span className="font-bold">₹{selectedJob.payment.toLocaleString()}</span>
+                  <div className="space-y-4 p-4 border rounded-lg bg-muted/20">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase">
+                        <Banknote className="h-3.5 w-3.5" />
+                        Compensation
+                      </div>
+                      <p className="text-xl font-bold">{selectedJob.salaryLPA}</p>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Status</span>
-                      <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-200">ACTIVE</Badge>
+                    
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase">
+                        <Clock className="h-3.5 w-3.5" />
+                        Tenure / Duration
+                      </div>
+                      <p className="text-sm font-medium">{selectedJob.tenure}</p>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Location</span>
-                      <span className="font-medium">{selectedJob.location}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Applicants</span>
-                      <span className="font-medium">{selectedJob.applicantsCount}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Deadline</span>
-                      <span className="font-medium">{selectedJob.deadline}</span>
+
+                    <Separator />
+
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Location</span>
+                        <span className="font-medium">{selectedJob.location}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Applicants</span>
+                        <span className="font-medium">{selectedJob.applicantsCount}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Deadline</span>
+                        <span className="font-medium">{selectedJob.deadline}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
