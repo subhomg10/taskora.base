@@ -1,4 +1,3 @@
-
 "use client"
 
 import React from 'react';
@@ -81,12 +80,12 @@ export default function UserSettingsPage() {
                 <Label htmlFor="current-pw">Current Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input id="current-pw" type="password" placeholder="••••••••" className="pl-9" />
+                  <Input id="current-pw" type="password" className="pl-9" />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="new-pw">New Password</Label>
-                <Input id="new-pw" type="password" placeholder="••••••••" />
+                <Input id="new-pw" type="password" />
               </div>
             </div>
             <div className="p-4 rounded-lg bg-muted/30 border border-dashed flex items-center justify-between mt-4">

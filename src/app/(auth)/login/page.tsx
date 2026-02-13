@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -87,7 +86,6 @@ export default function LoginPage() {
                 <Input 
                   id="password" 
                   type="password" 
-                  placeholder="••••••••" 
                   className="pl-9"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
