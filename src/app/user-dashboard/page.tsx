@@ -9,7 +9,8 @@ import {
   Clock,
   ArrowRight,
   Banknote,
-  CalendarCheck
+  CalendarCheck,
+  Filter
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,10 +22,33 @@ import {
   DialogTitle, 
   DialogDescription
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { useUser, useFirestore, useDoc, useMemoFirebase, useCollection } from '@/firebase';
 import { doc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+
+const ROLE_CATEGORIES = [
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Developer",
+  "Android Developer",
+  "iOS Developer",
+  "Web Developer",
+  "Game Developer",
+  "Software Engineer",
+  "Data Scientist",
+  "DevOps Engineer",
+  "UI/UX Designer",
+  "Graphic Designer",
+];
 
 // Mock Data updated to show Total Amount based on Tenure
 const mockJobs = [
@@ -40,7 +64,8 @@ const mockJobs = [
     deadline: "2026-03-15",
     applicantsCount: 12,
     coverImage: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Full-time", "React"]
+    tags: ["Full-time", "React"],
+    categories: ["Software Engineer", "Frontend Developer", "Web Developer"]
   },
   {
     id: "j2",
@@ -54,7 +79,8 @@ const mockJobs = [
     deadline: "2026-03-22",
     applicantsCount: 24,
     coverImage: "https://images.unsplash.com/photo-1650387220683-f9720bd98b55?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Contract", "Design"]
+    tags: ["Contract", "Design"],
+    categories: ["UI/UX Designer"]
   },
   {
     id: "j3",
@@ -68,7 +94,8 @@ const mockJobs = [
     deadline: "2026-03-05",
     applicantsCount: 8,
     coverImage: "https://images.unsplash.com/photo-1636673341470-54f37c461457?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Part-time", "Cloud"]
+    tags: ["Part-time", "Cloud"],
+    categories: ["DevOps Engineer"]
   },
   {
     id: "j4",
@@ -82,7 +109,8 @@ const mockJobs = [
     deadline: "2026-03-28",
     applicantsCount: 15,
     coverImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Full-time", "Next.js", "Node"]
+    tags: ["Full-time", "Next.js", "Node"],
+    categories: ["Full Stack Developer", "Web Developer", "Frontend Developer", "Backend Developer"]
   },
   {
     id: "j5",
@@ -96,7 +124,8 @@ const mockJobs = [
     deadline: "2026-03-10",
     applicantsCount: 9,
     coverImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Contract", "Mobile", "Flutter"]
+    tags: ["Contract", "Mobile", "Flutter"],
+    categories: ["Android Developer", "iOS Developer"]
   },
   {
     id: "j6",
@@ -110,7 +139,8 @@ const mockJobs = [
     deadline: "2026-03-20",
     applicantsCount: 18,
     coverImage: "https://images.unsplash.com/photo-1551288049-bbda38a5f9ce?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Full-time", "Data", "ML"]
+    tags: ["Full-time", "Data", "ML"],
+    categories: ["Data Scientist"]
   },
   {
     id: "j7",
@@ -124,13 +154,30 @@ const mockJobs = [
     deadline: "2026-03-18",
     applicantsCount: 5,
     coverImage: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1080",
-    tags: ["Full-time", "Security", "Cloud"]
+    tags: ["Full-time", "Security", "Cloud"],
+    categories: ["DevOps Engineer"]
+  },
+  {
+    id: "j8",
+    title: "Game Developer (Unity)",
+    shortDescription: "Develop a new 3D mobile game for our studio.",
+    fullDescription: "Join our game development team to build an exciting new 3D mobile game using the Unity engine. You will be responsible for gameplay mechanics, performance optimization, and integration of third-party SDKs.",
+    requirements: ["2+ years of Unity experience", "Proficiency in C#", "Portfolio of completed game projects"],
+    totalPayout: "₹12,00,000",
+    tenure: "12 Months (Full-time)",
+    location: "Remote / Pune, Maharashtra",
+    deadline: "2026-04-01",
+    applicantsCount: 7,
+    coverImage: "https://picsum.photos/seed/game-dev/1080/720",
+    tags: ["Full-time", "Gaming", "Unity"],
+    categories: ["Game Developer"]
   }
 ];
 
 export default function UserJobFeed() {
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [isApplying, setIsApplying] = useState(false);
+  const [filters, setFilters] = useState<string[]>([]);
   const { toast } = useToast();
   const { user } = useUser();
   const firestore = useFirestore();
@@ -196,64 +243,119 @@ export default function UserJobFeed() {
       setIsApplying(false);
     }
   };
+  
+  const handleFilterChange = (category: string) => {
+    setFilters(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category) 
+        : [...prev, category]
+    );
+  };
+
+  const filteredJobs = useMemo(() => {
+    if (filters.length === 0) {
+      return mockJobs;
+    }
+    return mockJobs.filter(job =>
+      filters.some(filter => (job.categories || []).includes(filter))
+    );
+  }, [filters]);
+
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Available Opportunities</h1>
-        <p className="text-muted-foreground">Find and apply for tasks that match your skill set.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Available Opportunities</h1>
+          <p className="text-muted-foreground">Find and apply for tasks that match your skill set.</p>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Filter
+              {filters.length > 0 && <Badge variant="secondary" className="ml-2 rounded-sm px-1">{filters.length}</Badge>}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Filter by Role</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {ROLE_CATEGORIES.map(category => (
+              <DropdownMenuCheckboxItem
+                key={category}
+                checked={filters.includes(category)}
+                onCheckedChange={() => handleFilterChange(category)}
+                onSelect={(e) => e.preventDefault()}
+              >
+                {category}
+              </DropdownMenuCheckboxItem>
+            ))}
+            {filters.length > 0 && (
+              <>
+                <DropdownMenuSeparator />
+                <Button variant="ghost" className="w-full h-8 text-xs" onClick={() => setFilters([])}>Clear filters</Button>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {mockJobs.map((job) => (
-          <Card key={job.id} className="overflow-hidden border shadow-sm hover:shadow-md transition-all flex flex-col group">
-            <div className="relative h-48 w-full overflow-hidden">
-              <Image 
-                src={job.coverImage} 
-                alt={job.title} 
-                fill 
-                className="object-cover transition-transform group-hover:scale-105"
-                data-ai-hint="job cover"
-              />
-            </div>
-            <CardHeader className="pb-2">
-              <div className="flex gap-2 mb-2">
-                {job.tags.map(tag => (
-                  <Badge key={tag} variant="secondary" className="text-[10px] uppercase font-bold tracking-wider">{tag}</Badge>
-                ))}
+        {filteredJobs.length > 0 ? (
+          filteredJobs.map((job) => (
+            <Card key={job.id} className="overflow-hidden border shadow-sm hover:shadow-md transition-all flex flex-col group">
+              <div className="relative h-48 w-full overflow-hidden">
+                <Image 
+                  src={job.coverImage} 
+                  alt={job.title} 
+                  fill 
+                  className="object-cover transition-transform group-hover:scale-105"
+                  data-ai-hint="job cover"
+                />
               </div>
-              <CardTitle className="text-xl line-clamp-1">{job.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 pb-4">
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{job.shortDescription}</p>
-              <div className="space-y-2">
-                <div className="flex items-center text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3 mr-2" />
-                  {job.location}
+              <CardHeader className="pb-2">
+                <div className="flex gap-2 mb-2">
+                  {job.tags.map(tag => (
+                    <Badge key={tag} variant="secondary" className="text-[10px] uppercase font-bold tracking-wider">{tag}</Badge>
+                  ))}
                 </div>
-                <div className="flex items-center text-xs text-muted-foreground">
-                  <Users className="h-3 w-3 mr-2" />
-                  {job.applicantsCount} Applicants
+                <CardTitle className="text-xl line-clamp-1">{job.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 pb-4">
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{job.shortDescription}</p>
+                <div className="space-y-2">
+                  <div className="flex items-center text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3 mr-2" />
+                    {job.location}
+                  </div>
+                  <div className="flex items-center text-xs text-muted-foreground">
+                    <Users className="h-3 w-3 mr-2" />
+                    {job.applicantsCount} Applicants
+                  </div>
+                  <div className="flex items-center text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3 mr-2" />
+                    Deadline: {job.deadline}
+                  </div>
                 </div>
-                <div className="flex items-center text-xs text-muted-foreground">
-                  <Clock className="h-3 w-3 mr-2" />
-                  Deadline: {job.deadline}
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="border-t bg-muted/5 p-4">
-              <Button 
-                variant="ghost" 
-                className="w-full text-xs font-semibold group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                onClick={() => setSelectedJob(job)}
-                disabled={isLoadingApplications}
-              >
-                {appliedJobIds.has(job.id) ? "Applied" : "View Details"}
-                <ArrowRight className="ml-2 h-3 w-3" />
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+              </CardContent>
+              <CardFooter className="border-t bg-muted/5 p-4">
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-xs font-semibold group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  onClick={() => setSelectedJob(job)}
+                  disabled={isLoadingApplications}
+                >
+                  {appliedJobIds.has(job.id) ? "Applied" : "View Details"}
+                  <ArrowRight className="ml-2 h-3 w-3" />
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        ) : (
+          <div className="md:col-span-2 lg:col-span-3 text-center py-20">
+            <p className="text-muted-foreground">No jobs found for the selected filters.</p>
+          </div>
+        )}
       </div>
 
       <Dialog open={!!selectedJob} onOpenChange={() => setSelectedJob(null)}>
